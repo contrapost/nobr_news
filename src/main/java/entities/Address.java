@@ -10,17 +10,14 @@ import javax.persistence.OneToOne;
  *
  */
 @Entity
-public class User {
-
+public class Address {
     @Id
     @GeneratedValue
-    private Long userID;
+    private Long id;
 
-    private String name;
-    private String surname;
+    private String city;
+    private String country;
 
-
-    @OneToOne(orphanRemoval = true) //if user is removed, then also the address is removed
-    private Address address;
-
+    @OneToOne(mappedBy = "address")
+    private User user;
 }
