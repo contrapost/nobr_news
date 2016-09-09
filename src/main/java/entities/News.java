@@ -1,6 +1,7 @@
 package entities;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,18 +16,29 @@ class News {
 
     private String text;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date date;
+
     @OneToOne
     private User user;
+
     @OneToOne(orphanRemoval = true)
     private Rating rating;
     @OneToMany(orphanRemoval = true)
     private List<Comment> comments;
-
     public News() {
     }
 
     public Long getNewsID() {
         return newsID;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public void setNewsID(Long newsID) {

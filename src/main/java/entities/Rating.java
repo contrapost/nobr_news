@@ -3,6 +3,7 @@ package entities;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Version;
 
 /**
  * Created by alex on 07.09.16.
@@ -10,6 +11,9 @@ import javax.persistence.Id;
  */
 @Entity
 class Rating {
+    @Version
+    private Integer version;
+
     @Id
     @GeneratedValue
     private Long ratingID;
@@ -33,18 +37,11 @@ class Rating {
     }
 
     public void setRating(int rating) {
-        this.rating = rating;
+        this.rating += rating;
+        this.votersNumber++;
     }
 
     public int getVotersNumber() {
         return votersNumber;
-    }
-
-    public void setVotersNumber(int votersNumber) {
-        this.votersNumber = votersNumber;
-    }
-
-    public void vote(int vote) {
-        rating += vote;
     }
 }
