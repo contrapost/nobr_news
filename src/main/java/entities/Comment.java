@@ -18,14 +18,15 @@ class Comment {
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
-    @OneToOne
+    @ManyToOne
     private User user;
-    @OneToOne(orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL)
     private Rating rating;
     @OneToMany(orphanRemoval = true)
     private List<Comment> comments;
 
     public Comment() {
+        rating = new Rating();
     }
 
     public Long getCommentID() {
@@ -62,10 +63,6 @@ class Comment {
 
     public Rating getRating() {
         return rating;
-    }
-
-    public void setRating(Rating rating) {
-        this.rating = rating;
     }
 
     public List<Comment> getComments() {

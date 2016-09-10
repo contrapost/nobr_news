@@ -22,7 +22,7 @@ class User {
     @OneToOne(orphanRemoval = true) //if user is removed, then also the address is removed
     private Address address;
 
-    @OneToMany
+    @OneToMany(orphanRemoval = false)
     private List<News> newses;
 
     @OneToMany

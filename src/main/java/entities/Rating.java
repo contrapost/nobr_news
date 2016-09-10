@@ -18,7 +18,7 @@ class Rating {
     @GeneratedValue
     private Long ratingID;
 
-    private int rating;
+    private int score;
     private int votersNumber;
 
     public Rating() {
@@ -32,12 +32,12 @@ class Rating {
         this.ratingID = ratingID;
     }
 
-    public int getRating() {
-        return rating;
+    public int getScore() {
+        return score;
     }
 
-    public void setRating(int rating) {
-        this.rating += rating;
+    public void setScore(int score) {
+        this.score += score;
         this.votersNumber++;
     }
 

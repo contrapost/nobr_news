@@ -6,10 +6,13 @@ import org.junit.Test;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.assertTrue;
+
+import static entities.DataLoader.persistInATransaction;
 
 /**
  * Created by alex on 07.09.16.
@@ -32,29 +35,11 @@ public class UserTest {
         factory.close();
     }
 
-    private boolean persistInATransaction(Object... obj) {
-        EntityTransaction tx = em.getTransaction();
-        tx.begin();
-
-        try {
-            for(Object o : obj) {
-                em.persist(o);
-            }
-            tx.commit();
-        } catch (Exception e) {
-            System.out.println("FAILED TRANSACTION: " + e.toString());
-            tx.rollback();
-            return false;
-        }
-
-        return true;
-    }
-
     @Test
     public void testEmptyUser(){
 
         User user = new User();
-        assertTrue(persistInATransaction(user));
+        assertTrue(persistInATransaction(em, user));
     }
 
     @Test
@@ -62,11 +47,27 @@ public class UserTest {
 
         Address address = new Address();
 
-        assertTrue(persistInATransaction(address));
+        assertTrue(persistInATransaction(em, address));
 
         User user = new User();
         user.setAddress(address);
 
-        assertTrue(persistInATransaction(user));
+        assertTrue(persistInATransaction(em, user));
+    }
+
+    @Test
+    public void testUserCanCreateNews(){
+        User user = new User();
+
+        News news = new News();
+        String newsText = "Great news";
+        news.setText(newsText);
+
+        user.setNewses(new ArrayList<>());
+        user.getNewses().add(news);
+
+        assertTrue(persistInATransaction(em, user, news));
+
+        assertTrue(em.find(User.class, user.getUserID()).getNewses().stream().anyMatch(n -> newsText.equals(n.getText())));
     }
 }
