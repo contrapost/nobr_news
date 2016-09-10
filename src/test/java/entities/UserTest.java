@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
 
-import static entities.DataLoader.persistInATransaction;
+import static entities.DataProcessor.updateInATransaction;
 
 /**
  * Created by alex on 07.09.16.
@@ -39,7 +39,7 @@ public class UserTest {
     public void testEmptyUser(){
 
         User user = new User();
-        assertTrue(persistInATransaction(em, user));
+        assertTrue(updateInATransaction(Operations.PERSIST, em, user));
     }
 
     @Test
@@ -47,12 +47,12 @@ public class UserTest {
 
         Address address = new Address();
 
-        assertTrue(persistInATransaction(em, address));
+        assertTrue(updateInATransaction(Operations.PERSIST, em, address));
 
         User user = new User();
         user.setAddress(address);
 
-        assertTrue(persistInATransaction(em, user));
+        assertTrue(updateInATransaction(Operations.PERSIST, em, user));
     }
 
     @Test
@@ -66,7 +66,7 @@ public class UserTest {
         user.setNewses(new ArrayList<>());
         user.getNewses().add(news);
 
-        assertTrue(persistInATransaction(em, user, news));
+        assertTrue(updateInATransaction(Operations.PERSIST, em, user, news));
 
         assertTrue(em.find(User.class, user.getUserID()).getNewses().stream().anyMatch(n -> newsText.equals(n.getText())));
     }

@@ -7,10 +7,9 @@ import org.junit.Test;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-
 import java.util.ArrayList;
 
-import static entities.DataLoader.persistInATransaction;
+import static entities.DataProcessor.*;
 import static org.junit.Assert.*;
 
 /**
@@ -43,14 +42,14 @@ public class RatingTest {
         int score = -1;
         news.getRating().setScore(score);
 
-        assertTrue(persistInATransaction(em, news));
+        assertTrue(updateInATransaction(Operations.PERSIST, em, news));
 
         assertEquals(score, em.find(News.class, news.getNewsID()).getRating().getScore());
     }
 
     @Test
     public void testNewlyCreatedNewsHasZeroRating(){
-        assertTrue(persistInATransaction(em, news));
+        assertTrue(updateInATransaction(Operations.PERSIST, em, news));
 
         assertEquals(0, em.find(News.class, news.getNewsID()).getRating().getScore());
     }
@@ -61,14 +60,13 @@ public class RatingTest {
 
         news.getRating().setScore(score);
 
-        assertTrue(persistInATransaction(em, news));
+        assertTrue(updateInATransaction(Operations.PERSIST, em, news));
 
         int anotherScore = 1;
         News foundNews = em.find(News.class, news.getNewsID());
         foundNews.getRating().setScore(anotherScore);
-        em.getTransaction().begin();
-        em.merge(foundNews);
-        em.getTransaction().commit();
+
+        updateInATransaction(Operations.UPDATE, em, foundNews);
 
         assertEquals(0, em.find(News.class, news.getNewsID()).getRating().getScore());
     }
@@ -79,21 +77,19 @@ public class RatingTest {
 
         news.getRating().setScore(score);
 
-        assertTrue(persistInATransaction(em, news));
+        assertTrue(updateInATransaction(Operations.PERSIST, em, news));
         assertEquals(1, em.find(News.class, news.getNewsID()).getRating().getScore());
 
         long ratingId = em.find(News.class, news.getNewsID()).getRating().getRatingID();
 
-        em.getTransaction().begin();
-        em.remove(news);
-        em.getTransaction().commit();
+        updateInATransaction(Operations.DELETE, em, news);
 
         assertNull(em.find(Rating.class, ratingId));
     }
 
     @Test
     public void testNewCommentHasDefaultRating() {
-        assertTrue(persistInATransaction(em, comment));
+        assertTrue(updateInATransaction(Operations.PERSIST, em, comment));
 
         Rating rating = em.find(Comment.class, comment.getCommentID()).getRating();
 
@@ -108,14 +104,12 @@ public class RatingTest {
         news.getComments().add(comment);
         comment.getRating().setScore(-5);
 
-        assertTrue(persistInATransaction(em, news, comment));
+        assertTrue(updateInATransaction(Operations.PERSIST, em, news, comment));
 
         Comment foundComment = em.find(Comment.class, comment.getCommentID());
         foundComment.getRating().setScore(10);
 
-        em.getTransaction().begin();
-        em.merge(news);
-        em.getTransaction().commit();
+        updateInATransaction(Operations.UPDATE, em, news);
 
         News foundNews = em.find(News.class, news.getNewsID());
 
@@ -128,7 +122,7 @@ public class RatingTest {
         news.getComments().add(comment);
         comment.getRating().setScore(20);
 
-        assertTrue(persistInATransaction(em, news, comment));
+        assertTrue(updateInATransaction(Operations.PERSIST, em, news, comment));
 
         long ratingID = comment.getRating().getRatingID();
 
@@ -138,9 +132,7 @@ public class RatingTest {
 
         assertNotNull(em.find(Rating.class, ratingID));
 
-        em.getTransaction().begin();
-        em.remove(news);
-        em.getTransaction().commit();
+        updateInATransaction(Operations.DELETE, em, news);
 
         assertNull(em.find(Rating.class, ratingID));
     }
