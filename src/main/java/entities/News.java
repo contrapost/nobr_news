@@ -9,7 +9,7 @@ import java.util.List;
  *
  */
 @Entity
-class News {
+public class News {
     @Id
     @GeneratedValue
     private Long newsID;
@@ -72,5 +72,9 @@ class News {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
     }
 }

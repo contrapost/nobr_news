@@ -1,16 +1,15 @@
 package entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Version;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by alex on 07.09.16.
  *
  */
 @Entity
-class Rating {
+public class Rating {
     @Version
     private Integer version;
 
@@ -19,9 +18,12 @@ class Rating {
     private Long ratingID;
 
     private int score;
-    private int votersNumber;
+
+    @ManyToMany
+    private List<User> voters;
 
     public Rating() {
+        voters = new ArrayList<>();
     }
 
     public long getRatingID() {
@@ -36,12 +38,41 @@ class Rating {
         return score;
     }
 
-    public void setScore(int score) {
-        this.score += score;
-        this.votersNumber++;
+    public void setScore(Votes vote, User user) {
+        if (voters.stream().map(User::getUserID).anyMatch(id -> id.equals(user.getUserID()))) {
+            return;
+        }
+        switch (vote) {
+            case UP:
+                score++;
+                break;
+            case DOWN:
+                score--;
+        }
+        voters.add(user);
     }
 
     public int getVotersNumber() {
-        return votersNumber;
+        return voters.size();
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
+    public void setRatingID(Long ratingID) {
+        this.ratingID = ratingID;
+    }
+
+    public List<User> getVoters() {
+        return voters;
+    }
+
+    public void setVoters(List<User> voters) {
+        this.voters = voters;
     }
 }

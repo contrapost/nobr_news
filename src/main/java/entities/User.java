@@ -8,7 +8,7 @@ import java.util.List;
  *
  */
 @Entity
-class User {
+public class User {
 
     @Id
     @GeneratedValue

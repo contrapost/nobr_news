@@ -10,7 +10,7 @@ import javax.persistence.OneToOne;
  *
  */
 @Entity
-class Address {
+public class Address {
     @Id
     @GeneratedValue
     private Long id;

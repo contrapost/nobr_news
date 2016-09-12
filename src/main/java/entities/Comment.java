@@ -9,7 +9,7 @@ import java.util.List;
  *
  */
 @Entity
-class Comment {
+public class Comment {
     @Id
     @GeneratedValue
     private Long commentID;
@@ -20,8 +20,10 @@ class Comment {
 
     @ManyToOne
     private User user;
+
     @OneToOne(cascade = CascadeType.ALL)
     private Rating rating;
+
     @OneToMany(orphanRemoval = true)
     private List<Comment> comments;
 
@@ -71,5 +73,9 @@ class Comment {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public void setRating(Rating rating) {
+        this.rating = rating;
     }
 }
