@@ -41,7 +41,7 @@ public class RatingTest {
 
     @Test
     public void testNewsCanGetRating(){
-        news.getRating().setScore(Votes.UP, user);
+        news.getRating().vote(Votes.UP, user);
 
         assertTrue(updateInATransaction(Operations.PERSIST, em, user, news));
 
@@ -57,14 +57,14 @@ public class RatingTest {
 
     @Test
     public void testNewsRatingCanBeChanged(){
-        news.getRating().setScore(Votes.DOWN, user);
+        news.getRating().vote(Votes.DOWN, user);
 
         assertTrue(updateInATransaction(Operations.PERSIST, em, user, news));
 
         Votes antherVote = Votes.UP;
         User user2 = new User();
         News foundNews = em.find(News.class, news.getNewsID());
-        foundNews.getRating().setScore(antherVote, user2);
+        foundNews.getRating().vote(antherVote, user2);
 
        assertTrue(updateInATransaction(Operations.PERSIST, em, user2));
 
@@ -77,7 +77,7 @@ public class RatingTest {
 
     @Test
     public void testDeletedNewsHasNoRating(){
-        news.getRating().setScore(Votes.UP, user);
+        news.getRating().vote(Votes.UP, user);
 
         assertTrue(updateInATransaction(Operations.PERSIST, em, user, news));
         assertEquals(1, em.find(News.class, news.getNewsID()).getRating().getScore());
@@ -104,13 +104,13 @@ public class RatingTest {
         News news = new News();
         news.setComments(new ArrayList<>());
         news.getComments().add(comment);
-        comment.getRating().setScore(Votes.UP, user);
+        comment.getRating().vote(Votes.UP, user);
 
         assertTrue(updateInATransaction(Operations.PERSIST, em, user, news, comment));
 
         Comment foundComment = em.find(Comment.class, comment.getCommentID());
         User user2 = new User();
-        foundComment.getRating().setScore(Votes.UP, user2);
+        foundComment.getRating().vote(Votes.UP, user2);
 
         assertTrue(updateInATransaction(Operations.PERSIST, em, user2));
 
@@ -125,7 +125,7 @@ public class RatingTest {
     public void testDeletedNewsHasNowRatingForComments(){
         news.setComments(new ArrayList<>());
         news.getComments().add(comment);
-        comment.getRating().setScore(Votes.UP, user);
+        comment.getRating().vote(Votes.UP, user);
 
         assertTrue(updateInATransaction(Operations.PERSIST, em, user, news, comment));
 
@@ -144,7 +144,7 @@ public class RatingTest {
 
     @Test
     public void testUserCanVoteJustOnce(){
-        news.getRating().setScore(Votes.UP, user);
+        news.getRating().vote(Votes.UP, user);
 
         assertTrue(updateInATransaction(Operations.PERSIST, em, user, news));
 
@@ -153,7 +153,7 @@ public class RatingTest {
         News foundNews = em.find(News.class, news.getNewsID());
         assertEquals(1, foundNews.getRating().getVotersNumber());
 
-        foundNews.getRating().setScore(Votes.UP, user);
+        foundNews.getRating().vote(Votes.UP, user);
 
 
         assertTrue(updateInATransaction(Operations.UPDATE, em, foundNews));
@@ -165,7 +165,7 @@ public class RatingTest {
 
         News againFoundNews = em.find(News.class, news.getNewsID());
         User user2 = new User();
-        againFoundNews.getRating().setScore(Votes.UP, user2);
+        againFoundNews.getRating().vote(Votes.UP, user2);
 
         assertTrue(updateInATransaction(Operations.PERSIST, em, user2));
         assertTrue(updateInATransaction(Operations.UPDATE, em, againFoundNews));
