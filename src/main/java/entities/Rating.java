@@ -38,7 +38,7 @@ public class Rating {
         return score;
     }
 
-    public void setScore(Votes vote, User user) {
+    public void vote(Votes vote, User user) {
         if (voters.stream().map(User::getUserID).anyMatch(id -> id.equals(user.getUserID()))) {
             return;
         }
@@ -74,5 +74,9 @@ public class Rating {
 
     public void setVoters(List<User> voters) {
         this.voters = voters;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }
