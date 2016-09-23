@@ -5,7 +5,6 @@ import java.util.List;
 
 /**
  * Created by alex on 05.09.16.
- *
  */
 @Entity
 public class User {
@@ -22,13 +21,18 @@ public class User {
     @OneToOne(orphanRemoval = true) //if user is removed, then also the address is removed
     private Address address;
 
-    @OneToMany(orphanRemoval = false)
+    @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER)
     private List<News> newses;
 
     @OneToMany
     private List<Comment> comments;
 
-    public User() {}
+    /*  IF we want to find all ratings user gave to news and comments
+    @ManyToMany(mappedBy = "voters")
+    private List<Rating> usersRatings;*/
+
+    public User() {
+    }
 
     public Long getUserID() {
         return userID;
