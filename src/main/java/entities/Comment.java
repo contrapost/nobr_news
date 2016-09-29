@@ -10,11 +10,13 @@ import java.util.List;
  */
 @Entity
 public class Comment {
+
     @Id
     @GeneratedValue
     private Long commentID;
 
     private String text;
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
@@ -24,7 +26,8 @@ public class Comment {
     @OneToOne(cascade = CascadeType.ALL)
     private Rating rating;
 
-    @OneToMany(orphanRemoval = true)
+    @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER)
+    @OrderBy("date desc")
     private List<Comment> comments;
 
     public Comment() {

@@ -23,15 +23,22 @@ public class User {
     private String email;
     private String password;
 
+    @OneToOne(orphanRemoval = true) //if user is removed, then also the address is removed
     private Address address;
 
     @OneToMany(mappedBy = "user")
+    @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER)
     private List<News> newses;
 
     @OneToMany(mappedBy = "user")
     private List<Comment> comments;
 
-    public User() {}
+    /*  IF we want to find all ratings user gave to news and comments
+    @ManyToMany(mappedBy = "voters")
+    private List<Rating> usersRatings;*/
+
+    public User() {
+    }
 
     public Long getUserID() {
         return userID;
