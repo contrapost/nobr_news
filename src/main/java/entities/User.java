@@ -23,11 +23,9 @@ public class User {
     private String email;
     private String password;
 
-    @OneToOne(orphanRemoval = true) //if user is removed, then also the address is removed
     private Address address;
 
-    @OneToMany(mappedBy = "user")
-    @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(orphanRemoval = false, fetch = FetchType.EAGER, mappedBy = "user")
     private List<News> newses;
 
     @OneToMany(mappedBy = "user")
