@@ -1,27 +1,20 @@
 package entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 /**
  * Created by alex on 05.09.16.
  *
  */
-@Entity
+@Embeddable
 public class Address {
-    @Id
-    @GeneratedValue
+
     private Long id;
 
     private String zipCode;
     private String street;
     private String city;
     private String country;
-
-    @OneToOne(mappedBy = "address")
-    private User user;
 
     public Address(){}
 
@@ -63,13 +56,5 @@ public class Address {
 
     public void setCountry(String country) {
         this.country = country;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 }

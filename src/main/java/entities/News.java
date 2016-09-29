@@ -8,8 +8,16 @@ import java.util.List;
  * Created by alex on 05.09.16.
  *
  */
+
+@NamedQueries({
+        @NamedQuery(name = News.TOTAL_NUMBER_OF_NEWS, query = "select count(n) from News n"),
+        @NamedQuery(name = News.TOTAL_NUMBER_OF_NEWS_FROM_COUNTRY, query = "select count(n) from News n where n.user.address.country = :country")
+})
 @Entity
 public class News {
+    public static final String TOTAL_NUMBER_OF_NEWS = "TOTAL_NUMBER_OF_NEWS";
+    public static final String TOTAL_NUMBER_OF_NEWS_FROM_COUNTRY = "TOTAL_NUMBER_OF_NEWS_FROM_COUNTRY";
+
     @Id
     @GeneratedValue
     private Long newsID;

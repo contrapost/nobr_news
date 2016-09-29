@@ -7,8 +7,12 @@ import java.util.List;
  * Created by alex on 05.09.16.
  *
  */
+@NamedQueries({
+        @NamedQuery(name = User.GET_ALL_COUNTRIES, query = "select DISTINCT u.address.country from User u"),
+})
 @Entity
 public class User {
+    public static final String GET_ALL_COUNTRIES = "GET_ALL_COUNTRIES";
 
     @Id
     @GeneratedValue
@@ -19,13 +23,12 @@ public class User {
     private String email;
     private String password;
 
-    @OneToOne(orphanRemoval = true) //if user is removed, then also the address is removed
     private Address address;
 
-    @OneToMany(orphanRemoval = false)
+    @OneToMany(mappedBy = "user")
     private List<News> newses;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     private List<Comment> comments;
 
     public User() {}
@@ -71,6 +74,9 @@ public class User {
     }
 
     public Address getAddress() {
+        if(address == null){
+            address = new Address();
+        }
         return address;
     }
 
