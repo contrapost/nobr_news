@@ -15,6 +15,7 @@ import java.util.List;
         @NamedQuery(name = User.GET_NUMBER_OF_ALL_USERS, query = "select count(*) from User u"),
         @NamedQuery(name = User.GET_NUMBER_OF_ALL_USERS_FROM_COUNTRY, query = "select count(*) from User u where u.address.country = :country"),
         @NamedQuery(name = User.GET_TOP_USERS, query = "select u from User u order by (u.comments.size + u.newses.size) desc"),
+        @NamedQuery(name = User.IS_EXISTING_USER, query = "select count(*) from User u where u.email = :email")
 })
 @Entity
 public class User {
@@ -22,6 +23,7 @@ public class User {
     public static final String GET_NUMBER_OF_ALL_USERS = "GET_NUMBER_OF_ALL_USERS";
     public static final String GET_NUMBER_OF_ALL_USERS_FROM_COUNTRY = "GET_NUMBER_OF_ALL_USERS_FROM_COUNTRY";
     public static final String GET_TOP_USERS = "GET_TOP_USERS";
+    public static final String IS_EXISTING_USER = "IS_EXISTING_USER";
 
     @Id
     @GeneratedValue

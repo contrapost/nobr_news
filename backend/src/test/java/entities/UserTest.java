@@ -265,4 +265,14 @@ public class UserTest {
 
         assertEquals(userA, topUsers.get(0));
     }
+
+    @Test
+    public void testExistingUser() {
+        updateInATransaction(Operations.PERSIST, em, userA);
+
+        Query query = em.createNamedQuery(User.IS_EXISTING_USER);
+        query.setParameter("email", "alex@aurum.com");
+        long numberOfUsers = (long) query.getSingleResult();
+        assertFalse(numberOfUsers == 0);
+    }
 }
