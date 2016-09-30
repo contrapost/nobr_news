@@ -25,12 +25,14 @@ public class NewsTest {
     private News newsC;
     private News newsD;
 
-    private EntityManagerFactory factory;
-    private EntityManager em;
     private User userA;
     private User userB;
     private User userC;
     private User userD;
+
+    private EntityManagerFactory factory;
+    private EntityManager em;
+
 
     @Before
     public void init() {
@@ -94,20 +96,14 @@ public class NewsTest {
     @Test
     public void testTotalNumberOfNewsFromNorway(){
         setNews(userA, newsA);
+        setNews(userB, newsB);
+        setNews(userC, newsC);
+        setNews(userD, newsD);
 
-        userB.setNewses(new ArrayList<>());
-        userB.getNewses().add(newsB);
-
-        userC.setNewses(new ArrayList<>());
-        userC.getNewses().add(newsC);
-
-        userD.setNewses(new ArrayList<>());
-        userD.getNewses().add(newsD);
-
-        newsA.setUser(userA);
-        newsB.setUser(userB);
-        newsC.setUser(userC);
-        newsD.setUser(userD);
+        newsA.setAuthor(userA);
+        newsB.setAuthor(userB);
+        newsC.setAuthor(userC);
+        newsD.setAuthor(userD);
 
         assertTrue(updateInATransaction(Operations.PERSIST, em, newsA, newsB, newsC, newsD, userA, userB, userC, userD));
 

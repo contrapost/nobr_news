@@ -1,39 +1,61 @@
 package entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by alex on 05.09.16.
- *
  */
 @NamedQueries({
         @NamedQuery(name = User.GET_ALL_COUNTRIES, query = "select DISTINCT u.address.country from User u"),
+        @NamedQuery(name = User.GET_NUMBER_OF_ALL_USERS, query = "select count(*) from User u"),
+        @NamedQuery(name = User.GET_NUMBER_OF_ALL_USERS_FROM_COUNTRY, query = "select count(*) from User u where u.address.country = :country"),
+        @NamedQuery(name = User.GET_TOP_USERS, query = "select u from User u order by (u.comments.size + u.newses.size) desc"),
 })
 @Entity
 public class User {
     public static final String GET_ALL_COUNTRIES = "GET_ALL_COUNTRIES";
+    public static final String GET_NUMBER_OF_ALL_USERS = "GET_NUMBER_OF_ALL_USERS";
+    public static final String GET_NUMBER_OF_ALL_USERS_FROM_COUNTRY = "GET_NUMBER_OF_ALL_USERS_FROM_COUNTRY";
+    public static final String GET_TOP_USERS = "GET_TOP_USERS";
 
     @Id
     @GeneratedValue
     private Long userID;
 
+    @NotNull
+    @Size(min = 2, max = 50)
     private String name;
+
+    @NotNull
+    @Size(min = 2, max = 50)
     private String surname;
+
+    @NotNull
+    @Pattern(regexp =
+            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
     private String email;
+
+    @NotNull
+    @Size(min = 6, max = 100)
     private String password;
 
+    @NotNull
     private Address address;
 
-    @OneToMany(orphanRemoval = false, fetch = FetchType.EAGER, mappedBy = "user")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "author")
     private List<News> newses;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "author")
     private List<Comment> comments;
 
     /*  IF we want to find all ratings user gave to news and comments
     @ManyToMany(mappedBy = "voters")
-    private List<Rating> usersRatings;*/
+    private List<Rating> ratingsFromUser;*/
 
     public User() {
     }
@@ -79,7 +101,7 @@ public class User {
     }
 
     public Address getAddress() {
-        if(address == null){
+        if (address == null) {
             address = new Address();
         }
         return address;
@@ -90,6 +112,9 @@ public class User {
     }
 
     public List<News> getNewses() {
+        if (newses == null) {
+            newses = new ArrayList<>();
+        }
         return newses;
     }
 
@@ -98,6 +123,11 @@ public class User {
     }
 
     public List<Comment> getComments() {
+
+        if (comments == null) {
+            comments = new ArrayList<>();
+        }
+
         return comments;
     }
 

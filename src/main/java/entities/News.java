@@ -1,6 +1,9 @@
 package entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,7 +14,7 @@ import java.util.List;
 
 @NamedQueries({
         @NamedQuery(name = News.TOTAL_NUMBER_OF_NEWS, query = "select count(n) from News n"),
-        @NamedQuery(name = News.TOTAL_NUMBER_OF_NEWS_FROM_COUNTRY, query = "select count(n) from News n where n.user.address.country = :country")
+        @NamedQuery(name = News.TOTAL_NUMBER_OF_NEWS_FROM_COUNTRY, query = "select count(n) from News n where n.author.address.country = :country")
 })
 @Entity
 public class News {
@@ -22,13 +25,16 @@ public class News {
     @GeneratedValue
     private Long newsID;
 
+    @NotNull
+    @Size(min = 1, max = 5000)
     private String text;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
+    @NotNull
     @ManyToOne
-    private User user;
+    private User author;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Rating rating;
@@ -64,12 +70,12 @@ public class News {
         this.text = text;
     }
 
-    public User getUser() {
-        return user;
+    public User getAuthor() {
+        return author;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     public Rating getRating() {
@@ -77,6 +83,10 @@ public class News {
     }
 
     public List<Comment> getComments() {
+
+        if(comments == null) {
+            comments = new ArrayList<>();
+        }
         return comments;
     }
 

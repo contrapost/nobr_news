@@ -1,6 +1,8 @@
 package entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * Created by alex on 05.09.16.
@@ -11,9 +13,20 @@ public class Address {
 
     private Long id;
 
+    @NotNull
+    @Size(min = 4, max = 4)
     private String zipCode;
+
+    @NotNull
+    @Size(min = 4, max = 128)
     private String street;
+
+    @NotNull
+    @Size(min = 2, max = 128)
     private String city;
+
+    @NotNull
+    @Size(min = 3, max = 128)
     private String country;
 
     public Address(){}
