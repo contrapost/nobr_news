@@ -35,7 +35,7 @@ public class NewsTest {
 
     @Before
     public void init() {
-        factory = Persistence.createEntityManagerFactory("DB");
+        factory = Persistence.createEntityManagerFactory("DBManual");
         em = factory.createEntityManager();
         setUsers();
         setNewses();

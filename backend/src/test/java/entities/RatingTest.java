@@ -27,7 +27,7 @@ public class RatingTest {
 
     @Before
     public void init() {
-        factory = Persistence.createEntityManagerFactory("DB");
+        factory = Persistence.createEntityManagerFactory("DBManual");
         em = factory.createEntityManager();
 
         user = new User();
