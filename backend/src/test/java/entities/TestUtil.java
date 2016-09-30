@@ -2,14 +2,15 @@ package entities;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import java.util.Date;
 
 /**
  * Created by alex on 10.09.16.
  *
  */
-class DataProcessor {
+public class TestUtil {
 
-    static boolean updateInATransaction(Operations operation, EntityManager em, Object... obj)  {
+    public static boolean updateInATransaction(Operations operation, EntityManager em, Object... obj)  {
         EntityTransaction tx = em.getTransaction();
         tx.begin();
 

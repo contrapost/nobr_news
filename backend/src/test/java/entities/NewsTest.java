@@ -8,15 +8,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-import java.util.ArrayList;
+import java.util.Date;
 
-import static entities.DataProcessor.updateInATransaction;
+import static entities.TestUtil.updateInATransaction;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
  * Created by alex on 10.09.16.
- *
  */
 public class NewsTest {
 
@@ -38,8 +37,8 @@ public class NewsTest {
     public void init() {
         factory = Persistence.createEntityManagerFactory("DB");
         em = factory.createEntityManager();
-        setNewses();
         setUsers();
+        setNewses();
     }
 
     @After
@@ -48,43 +47,79 @@ public class NewsTest {
         factory.close();
     }
 
-    private void setNewses(){
+    private void setNewses() {
         newsA = new News();
         newsB = new News();
         newsC = new News();
         newsD = new News();
+
+        newsA.setText("NewsA");
+        newsB.setText("NewsB");
+        newsC.setText("NewsC");
+        newsD.setText("NewsD");
+
+        newsA.setDate(new Date());
+        newsB.setDate(new Date());
+        newsC.setDate(new Date());
+        newsD.setDate(new Date());
+
+        newsA.setAuthor(userA);
+        newsB.setAuthor(userB);
+        newsC.setAuthor(userC);
+        newsD.setAuthor(userD);
     }
 
     private void setUsers() {
         userA = new User();
-        userA.setName("A");
+        userA.setName("Alex");
+        userA.setSurname("Aurum");
+        userA.getAddress().setZipCode("1234");
+        userA.getAddress().setStreet("Street");
         userA.getAddress().setCity("Oslo");
         userA.getAddress().setCountry("Norway");
+        userA.setEmail("alex@aurum.com");
+        userA.setPassword("er78dfe");
 
         userB = new User();
-        userB.setName("B");
+        userB.setName("Bob");
+        userB.setSurname("Brom");
+        userB.getAddress().setZipCode("1234");
+        userB.getAddress().setStreet("Street");
         userB.getAddress().setCity("Madrid");
         userB.getAddress().setCountry("Spain");
+        userB.setEmail("bob@brom.com");
+        userB.setPassword("er78dfe");
 
         userC = new User();
-        userC.setName("C");
+        userC.setName("Chris");
+        userC.setSurname("Chlor");
+        userC.getAddress().setZipCode("1234");
+        userC.getAddress().setStreet("Street");
         userC.getAddress().setCity("Bergen");
         userC.getAddress().setCountry("Norway");
+        userC.setEmail("chris@chlor.com");
+        userC.setPassword("er78dfe");
 
         userD = new User();
-        userD.setName("D");
+        userD.setName("David");
+        userD.setSurname("Doom");
+        userD.getAddress().setZipCode("1234");
+        userD.getAddress().setStreet("Street");
         userD.getAddress().setCity("London");
         userD.getAddress().setCountry("England");
+        userD.setEmail("david@doom.com");
+        userD.setPassword("er78dfe");
     }
 
-    private void setNews(User user, News news){
-        user.setNewses(new ArrayList<>());
+    private void setNews(User user, News news) {
         user.getNewses().add(news);
     }
 
     @Test
-    public void testTotalNumberOfNews(){
-        assertTrue(updateInATransaction(Operations.PERSIST, em, newsA, newsB, newsC));
+    public void testTotalNumberOfNews() {
+
+
+        assertTrue(updateInATransaction(Operations.PERSIST, em, userA, userB, userC, newsA, newsB, newsC));
 
         Query query = em.createNamedQuery(News.TOTAL_NUMBER_OF_NEWS);
 
@@ -94,18 +129,13 @@ public class NewsTest {
     }
 
     @Test
-    public void testTotalNumberOfNewsFromNorway(){
+    public void testTotalNumberOfNewsFromNorway() {
         setNews(userA, newsA);
         setNews(userB, newsB);
         setNews(userC, newsC);
         setNews(userD, newsD);
 
-        newsA.setAuthor(userA);
-        newsB.setAuthor(userB);
-        newsC.setAuthor(userC);
-        newsD.setAuthor(userD);
-
-        assertTrue(updateInATransaction(Operations.PERSIST, em, newsA, newsB, newsC, newsD, userA, userB, userC, userD));
+        assertTrue(updateInATransaction(Operations.PERSIST, em, userA, userB, userC, userD, newsA, newsB, newsC, newsD));
 
 
         Query query = em.createNamedQuery(News.TOTAL_NUMBER_OF_NEWS_FROM_COUNTRY);

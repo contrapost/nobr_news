@@ -22,11 +22,16 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="nobr_news" />
+        <module name="backend" />
+        <module name="frontend" />
+        <module name="report" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="nobr_news" target="1.8" />
+      <module name="backend" target="1.8" />
+      <module name="frontend" target="1.8" />
+      <module name="nobr_news" target="1.5" />
+      <module name="report" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

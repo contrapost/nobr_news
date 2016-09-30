@@ -29,6 +29,7 @@ public class News {
     @Size(min = 1, max = 5000)
     private String text;
 
+    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
@@ -42,6 +43,7 @@ public class News {
     @OneToMany(orphanRemoval = true, fetch = FetchType.EAGER)
     @OrderBy("date desc")
     private List<Comment> comments;
+
     public News() {
         rating = new Rating();
     }

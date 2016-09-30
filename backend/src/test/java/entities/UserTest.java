@@ -10,13 +10,14 @@ import javax.persistence.Persistence;
 import javax.persistence.Query;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import static entities.DataProcessor.updateInATransaction;
+import static entities.TestUtil.updateInATransaction;
 
 /**
  * Created by alex on 07.09.16.
@@ -62,35 +63,78 @@ public class UserTest {
 
     private void setComments() {
         commentA = new Comment();
+        commentA.setText("CommentA");
+        commentA.setDate(new Date());
+
         commentB = new Comment();
+        commentB.setText("CommentB");
+        commentB.setDate(new Date());
+
         commentC = new Comment();
+        commentC.setText("CommentC");
+        commentC.setDate(new Date());
+
         commentD = new Comment();
+        commentD.setText("CommentD");
+        commentD.setDate(new Date());
+
         commentE = new Comment();
+        commentE.setText("CommentE");
+        commentE.setDate(new Date());
+
         commentF = new Comment();
+        commentF.setText("CommentF");
+        commentF.setDate(new Date());
+
         commentG = new Comment();
+        commentG.setText("CommentG");
+        commentG.setDate(new Date());
+
         commentH = new Comment();
+        commentH.setText("CommentH");
+        commentH.setDate(new Date());
     }
 
     private void setUsers() {
         userA = new User();
-        userA.setName("A");
+        userA.setName("Alex");
+        userA.setSurname("Aurum");
+        userA.getAddress().setZipCode("1234");
+        userA.getAddress().setStreet("Street");
         userA.getAddress().setCity("Oslo");
         userA.getAddress().setCountry("Norway");
+        userA.setEmail("alex@aurum.com");
+        userA.setPassword("er78dfe");
 
         userB = new User();
-        userB.setName("B");
+        userB.setName("Bob");
+        userB.setSurname("Brom");
+        userB.getAddress().setZipCode("1234");
+        userB.getAddress().setStreet("Street");
         userB.getAddress().setCity("Madrid");
         userB.getAddress().setCountry("Spain");
+        userB.setEmail("bob@brom.com");
+        userB.setPassword("er78dfe");
 
         userC = new User();
-        userC.setName("C");
+        userC.setName("Chris");
+        userC.setSurname("Chlor");
+        userC.getAddress().setZipCode("1234");
+        userC.getAddress().setStreet("Street");
         userC.getAddress().setCity("Bergen");
         userC.getAddress().setCountry("Norway");
+        userC.setEmail("chris@chlor.com");
+        userC.setPassword("er78dfe");
 
         userD = new User();
-        userD.setName("D");
+        userD.setName("David");
+        userD.setSurname("Doom");
+        userD.getAddress().setZipCode("1234");
+        userD.getAddress().setStreet("Street");
         userD.getAddress().setCity("London");
         userD.getAddress().setCountry("England");
+        userD.setEmail("david@doom.com");
+        userD.setPassword("er78dfe");
     }
 
     private void setNewses() {
@@ -98,6 +142,21 @@ public class UserTest {
         newsB = new News();
         newsC = new News();
         newsD = new News();
+
+        newsA.setText("NewsA");
+        newsB.setText("NewsB");
+        newsC.setText("NewsC");
+        newsD.setText("NewsD");
+
+        newsA.setDate(new Date());
+        newsB.setDate(new Date());
+        newsC.setDate(new Date());
+        newsD.setDate(new Date());
+
+        newsA.setAuthor(userA);
+        newsB.setAuthor(userB);
+        newsC.setAuthor(userC);
+        newsD.setAuthor(userD);
     }
 
     private void setNews(User user, News ... newses) {
@@ -119,23 +178,16 @@ public class UserTest {
     public void testEmptyUser() {
 
         User user = new User();
-        assertTrue(updateInATransaction(Operations.PERSIST, em, user));
+        assertFalse(updateInATransaction(Operations.PERSIST, em, user));
     }
 
     @Test
     public void testUserCanCreateNews() {
-        User user = new User();
+        setNews(userA, newsA);
 
-        News news = new News();
-        String newsText = "Great news";
-        news.setText(newsText);
+        assertTrue(updateInATransaction(Operations.PERSIST, em, userA, newsA));
 
-        user.setNewses(new ArrayList<>());
-        user.getNewses().add(news);
-
-        assertTrue(updateInATransaction(Operations.PERSIST, em, user, news));
-
-        assertTrue(em.find(User.class, user.getUserID()).getNewses().stream().anyMatch(n -> newsText.equals(n.getText())));
+        assertTrue(em.find(User.class, userA.getUserID()).getNewses().stream().anyMatch(n -> "NewsA".equals(n.getText())));
     }
 
     @Test
@@ -204,7 +256,7 @@ public class UserTest {
                 em.find(User.class, userC.getUserID()).getComments().size());
 
         Query query = em.createNamedQuery(User.GET_TOP_USERS);
-        List<User> topUsers = query.getResultList().subList(0, 2);
+        List<User> topUsers = query.getResultList().subList(0, 2); //Get top 2
 
         assertTrue(topUsers.contains(userA));
         assertTrue(topUsers.contains(userC));

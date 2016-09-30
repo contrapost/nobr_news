@@ -8,8 +8,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import java.util.ArrayList;
+import java.util.Date;
 
-import static entities.DataProcessor.*;
+import static entities.TestUtil.*;
 import static org.junit.Assert.*;
 
 /**
@@ -28,9 +29,25 @@ public class RatingTest {
     public void init() {
         factory = Persistence.createEntityManagerFactory("DB");
         em = factory.createEntityManager();
-        news = new News();
-        comment = new Comment();
+
         user = new User();
+        user.setName("Alex");
+        user.setSurname("Aurum");
+        user.getAddress().setZipCode("1234");
+        user.getAddress().setStreet("Street");
+        user.getAddress().setCity("Oslo");
+        user.getAddress().setCountry("Norway");
+        user.setEmail("alex@aurum.com");
+        user.setPassword("er78dfe");
+
+        news = new News();
+        news.setText("NewsA");
+        news.setDate(new Date());
+        news.setAuthor(user);
+
+        comment = new Comment();
+        comment.setText("CommentA");
+        comment.setDate(new Date());
     }
 
     @After
@@ -50,7 +67,8 @@ public class RatingTest {
 
     @Test
     public void testNewlyCreatedNewsHasZeroRating(){
-        assertTrue(updateInATransaction(Operations.PERSIST, em, news));
+        news.setAuthor(user);
+        assertTrue(updateInATransaction(Operations.PERSIST, em, user, news));
 
         assertEquals(0, em.find(News.class, news.getNewsID()).getRating().getScore());
     }
@@ -63,10 +81,19 @@ public class RatingTest {
 
         Votes antherVote = Votes.UP;
         User user2 = new User();
+        user2.setName("Alex");
+        user2.setSurname("Aurum");
+        user2.getAddress().setZipCode("1234");
+        user2.getAddress().setStreet("Street");
+        user2.getAddress().setCity("Oslo");
+        user2.getAddress().setCountry("Norway");
+        user2.setEmail("alex@aurum.com");
+        user2.setPassword("er78dfe");
+
         News foundNews = em.find(News.class, news.getNewsID());
         foundNews.getRating().vote(antherVote, user2);
 
-       assertTrue(updateInATransaction(Operations.PERSIST, em, user2));
+        assertTrue(updateInATransaction(Operations.PERSIST, em, user2));
 
         assertTrue(updateInATransaction(Operations.UPDATE, em, foundNews));
 
@@ -91,7 +118,8 @@ public class RatingTest {
 
     @Test
     public void testNewCommentHasDefaultRating() {
-        assertTrue(updateInATransaction(Operations.PERSIST, em, comment));
+        comment.setAuthor(user);
+        assertTrue(updateInATransaction(Operations.PERSIST, em, user, comment));
 
         Rating rating = em.find(Comment.class, comment.getCommentID()).getRating();
 
@@ -101,15 +129,25 @@ public class RatingTest {
 
     @Test
     public void testCommentRatingCanBeChanged() {
-        News news = new News();
-        news.setComments(new ArrayList<>());
+        comment.setAuthor(user);
         news.getComments().add(comment);
+        news.setAuthor(user);
         comment.getRating().vote(Votes.UP, user);
 
         assertTrue(updateInATransaction(Operations.PERSIST, em, user, news, comment));
 
         Comment foundComment = em.find(Comment.class, comment.getCommentID());
+
         User user2 = new User();
+        user2.setName("Alex");
+        user2.setSurname("Aurum");
+        user2.getAddress().setZipCode("1234");
+        user2.getAddress().setStreet("Street");
+        user2.getAddress().setCity("Oslo");
+        user2.getAddress().setCountry("Norway");
+        user2.setEmail("alex@aurum.com");
+        user2.setPassword("er78dfe");
+
         foundComment.getRating().vote(Votes.UP, user2);
 
         assertTrue(updateInATransaction(Operations.PERSIST, em, user2));
@@ -123,7 +161,8 @@ public class RatingTest {
 
     @Test
     public void testDeletedNewsHasNowRatingForComments(){
-        news.setComments(new ArrayList<>());
+        comment.setAuthor(user);
+        news.setAuthor(user);
         news.getComments().add(comment);
         comment.getRating().vote(Votes.UP, user);
 
@@ -144,6 +183,7 @@ public class RatingTest {
 
     @Test
     public void testUserCanVoteJustOnce(){
+        news.setAuthor(user);
         news.getRating().vote(Votes.UP, user);
 
         assertTrue(updateInATransaction(Operations.PERSIST, em, user, news));
@@ -164,7 +204,17 @@ public class RatingTest {
         em.clear();
 
         News againFoundNews = em.find(News.class, news.getNewsID());
+
         User user2 = new User();
+        user2.setName("Alex");
+        user2.setSurname("Aurum");
+        user2.getAddress().setZipCode("1234");
+        user2.getAddress().setStreet("Street");
+        user2.getAddress().setCity("Oslo");
+        user2.getAddress().setCountry("Norway");
+        user2.setEmail("alex@aurum.com");
+        user2.setPassword("er78dfe");
+
         againFoundNews.getRating().vote(Votes.UP, user2);
 
         assertTrue(updateInATransaction(Operations.PERSIST, em, user2));
