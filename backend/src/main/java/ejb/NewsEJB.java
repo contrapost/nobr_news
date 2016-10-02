@@ -12,25 +12,29 @@ import java.util.Date;
 
 /**
  * Created by alexandershipunov on 30/09/16.
+ *
  */
 @Stateless
 public class NewsEJB {
 
-    @PersistenceContext
+    @PersistenceContext(unitName = "DBAutomatic")
     private EntityManager em;
 
     public NewsEJB(){}
 
-    public void createNews(@NotNull User user, @NotNull String text, @NotNull Date date) {
+    public News createNews(@NotNull User user, @NotNull String text, @NotNull Date date) {
         News news = new News();
         news.setAuthor(user);
         news.setText(text);
         news.setDate(date);
 
-        user.getNewses().add(news);
+        User foundUser = em.find(User.class, user.getUserID());
+        foundUser.getNewses().add(news);
 
-        em.persist(user);
+        em.persist(foundUser);
         em.persist(news);
+
+        return news;
     }
 
     public long getNumberOfAllNewses() {

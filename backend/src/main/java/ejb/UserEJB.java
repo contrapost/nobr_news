@@ -1,7 +1,6 @@
 package ejb;
 
 import entities.Address;
-import entities.News;
 import entities.User;
 
 import javax.ejb.Stateless;
@@ -9,7 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,7 +17,7 @@ import java.util.List;
 @Stateless
 public class UserEJB {
 
-    @PersistenceContext
+    @PersistenceContext(unitName = "DBAutomatic")
     private EntityManager em;
 
     public UserEJB(){}
@@ -39,13 +37,20 @@ public class UserEJB {
         em.persist(user);
     }
 
+    public User getUser(String email) {
+        Query query = em.createNamedQuery(User.GET_USER_BY_EMAIL);
+        query.setParameter("email", email);
+        List<User> users = query.getResultList();
+        return users.get(0);
+    }
+
     public List<String> getAllCountries() {
         Query query = em.createNamedQuery(User.GET_ALL_COUNTRIES);
         return query.getResultList();
     }
 
     public long getNumberOfAllUsers() {
-        Query query = em.createNamedQuery(User.GET_ALL_COUNTRIES);
+        Query query = em.createNamedQuery(User.GET_NUMBER_OF_ALL_USERS);
         return (long) query.getSingleResult();
     }
 
@@ -67,9 +72,9 @@ public class UserEJB {
 
     private boolean isRegistered(String email) {
 
-        Query query = em.createNamedQuery(User.IS_EXISTING_USER);
+        Query query = em.createNamedQuery(User.GET_USER_BY_EMAIL);
         query.setParameter("email", email);
-        long numberOfUsers = (long) query.getSingleResult();
-        return numberOfUsers != 0;
+        List<User> users = query.getResultList();
+        return users.size() != 0;
     }
 }

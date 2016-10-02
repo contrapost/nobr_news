@@ -7,16 +7,19 @@ import entities.User;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by alexandershipunov on 30/09/16.
+ *
  */
 @Stateless
 public class CommentEJB {
 
-    @PersistenceContext
+    @PersistenceContext(unitName = "DBAutomatic")
     private EntityManager em;
 
     public CommentEJB(){}
@@ -26,12 +29,21 @@ public class CommentEJB {
         comment.setAuthor(user);
         comment.setText(text);
         comment.setDate(date);
-        news.getComments().add(comment);
 
-        user.getComments().add(comment);
+        News foundNews = em.find(News.class, news.getNewsID());
+        User foundUser = em.find(User.class, user.getUserID());
+
+        foundNews.getComments().add(comment);
+
+        foundUser.getComments().add(comment);
 
         em.persist(comment);
-        em.persist(news);
-        em.persist(user);
+        em.persist(foundNews);
+        em.persist(foundUser);
+    }
+
+    public List<Comment> getAllComments(){
+        Query query = em.createNamedQuery(Comment.GET_ALL_COMMENTS);
+        return (List<Comment>) query.getResultList();
     }
 }

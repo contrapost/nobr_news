@@ -12,7 +12,11 @@ import java.util.List;
  *
  */
 @Entity
+@NamedQueries({
+        @NamedQuery(name = Comment.GET_ALL_COMMENTS, query = "select c from Comment c")
+})
 public class Comment {
+    public static final String GET_ALL_COMMENTS = "GET_ALL_COMMENTS";
 
     @Id
     @GeneratedValue

@@ -8,11 +8,12 @@ import javax.persistence.Query;
 
 /**
  * Created by alexandershipunov on 30/09/16.
+ *
  */
 @Stateless
 public class DeleterEJB {
 
-    @PersistenceContext
+    @PersistenceContext(unitName = "DBAutomatic")
     private EntityManager em;
 
     public void deleteEntities(Class<?> entity){
@@ -22,15 +23,6 @@ public class DeleterEJB {
         }
 
         String name = entity.getSimpleName();
-
-        /*
-            Note: we passed as input a Class<?> instead of a String to
-            avoid SQL injection. However, being here just test code, it should
-            not be a problem. But, as a good habit, always be paranoiac about
-            security, above all when you have code that can delete the whole
-            database...
-         */
-
         Query query = em.createQuery("delete from " + name);
         query.executeUpdate();
     }

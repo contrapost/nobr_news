@@ -8,16 +8,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import static entities.TestUtil.updateInATransaction;
+import static org.junit.Assert.*;
 
 /**
  * Created by alex on 07.09.16.
@@ -270,9 +265,14 @@ public class UserTest {
     public void testExistingUser() {
         updateInATransaction(Operations.PERSIST, em, userA);
 
-        Query query = em.createNamedQuery(User.IS_EXISTING_USER);
+        Query query = em.createNamedQuery(User.GET_USER_BY_EMAIL);
         query.setParameter("email", "alex@aurum.com");
-        long numberOfUsers = (long) query.getSingleResult();
-        assertFalse(numberOfUsers == 0);
+        List<User> users = query.getResultList();
+        assertFalse(users.size() == 0);
+
+        Query query2 = em.createNamedQuery(User.GET_USER_BY_EMAIL);
+        query2.setParameter("email", "alex22@aurum.com");
+        List<User> users2 = query2.getResultList();
+        assertTrue(users2.size() == 0);
     }
 }

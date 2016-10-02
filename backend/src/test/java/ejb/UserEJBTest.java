@@ -1,8 +1,6 @@
 package ejb;
 
 import entities.Address;
-import entities.Comment;
-import entities.News;
 import entities.User;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -14,7 +12,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
-import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
@@ -23,7 +20,7 @@ import static org.junit.Assert.assertEquals;
  *
  */
 @RunWith(Arquillian.class)
-public class CommentEJBTest {
+public class UserEJBTest {
 
     @Deployment
     public static JavaArchive createDeployment() {
@@ -36,14 +33,9 @@ public class CommentEJBTest {
                 .addAsResource("META-INF/persistence.xml");
     }
 
+
     @EJB
     private UserEJB userEJB;
-
-    @EJB
-    private NewsEJB newsEJB;
-
-    @EJB
-    private CommentEJB commentEJB;
 
     @EJB
     private DeleterEJB deleterEJB;
@@ -52,13 +44,11 @@ public class CommentEJBTest {
     @Before
     @After
     public void emptyDatabase(){
-        deleterEJB.deleteEntities(News.class);
-        deleterEJB.deleteEntities(Comment.class);
         deleterEJB.deleteEntities(User.class);
     }
 
     @Test
-    public void createComment(){
+    public void testCreateUser(){
         Address address = new Address();
         address.setStreet("Street");
         address.setZipCode("1234");
@@ -67,10 +57,7 @@ public class CommentEJBTest {
 
         userEJB.createNewUser("name", "surname", "name@surname.com", "12we34ty", address);
 
-        commentEJB.createComment(userEJB.getUser("name@surname.com"),
-                newsEJB.createNews(userEJB.getUser("name@surname.com"), "Text of the news here", new Date()),
-                "Comment's text here", new Date());
-
-        assertEquals(1, commentEJB.getAllComments().size());
+        assertEquals(1, userEJB.getNumberOfAllUsers());
     }
+
 }
