@@ -8,6 +8,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +18,7 @@ import static org.junit.Assert.*;
 
 /**
  * Created by alex on 07.09.16.
+ *
  */
 public class UserTest {
 
@@ -251,12 +254,18 @@ public class UserTest {
                 em.find(User.class, userC.getUserID()).getComments().size());
 
         Query query = em.createNamedQuery(User.GET_TOP_USERS);
-        List<User> topUsers = query.getResultList().subList(0, 2); //Get top 2
+        query.setMaxResults(2); // Test will fail if we call setMaxResults(3)
+        List<User> topUsers = query.getResultList(); //Get top 2
+        Collections.sort(topUsers, (o1, o2) -> {
+            if(o1.getNewses().size() + o1.getComments().size() == o2.getNewses().size() + o2.getComments().size())
+                return 0;
+            return (o1.getNewses().size() + o1.getComments().size()) > (o2.getNewses().size() + o2.getComments().size()) ? -1 : 1;
+        });
 
         assertTrue(topUsers.contains(userA));
         assertTrue(topUsers.contains(userC));
         assertFalse(topUsers.contains(userD));
-        assertFalse(topUsers.contains(userB));
+        assertTrue(topUsers.contains(userB));
 
         assertEquals(userA, topUsers.get(0));
     }
