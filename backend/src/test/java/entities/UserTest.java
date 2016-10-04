@@ -277,6 +277,7 @@ public class UserTest {
         query.setParameter("email", "alex@aurum.com");
         List<User> users = query.getResultList();
         assertFalse(users.size() == 0);
+        assertEquals(em.find(User.class, userA.getUserID()), users.get(0));
 
         Query query2 = em.createNamedQuery(User.GET_USER_BY_EMAIL);
         query2.setParameter("email", "alex22@aurum.com");
