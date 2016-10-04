@@ -17,6 +17,7 @@ import javax.ejb.EJB;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Created by alexandershipunov on 30/09/16.
@@ -152,9 +153,14 @@ public class UserEJBTest {
                 newsEJB.createNews(userEJB.getUser("den@dlum.com"), "Text of the news here", new Date()),
                 "Comment's text here", new Date());
 
-        //Alex has 2 newses and 4 comments, Conney has 2 neses and 2 comments, Bart has 1 news, Den has 1 news
+        //Alex has 2 newses and 4 comments, Conney has 2 newses and 2 comments, Bart has 1 news, Den has 1 news
 
         assertEquals(2, userEJB.getXTopUsers(2).size());
+
+        assertEquals("alex@alum.com", userEJB.getXTopUsers(2).get(0).getEmail());
+        assertEquals("conney@clum.com", userEJB.getXTopUsers(2).get(1).getEmail());
+        assertFalse(userEJB.getXTopUsers(2).stream().anyMatch(user -> "den@dlum.com".equals(user.getEmail())));
+        assertFalse(userEJB.getXTopUsers(2).stream().anyMatch(user -> "bart@blum.com".equals(user.getEmail())));
     }
 
 }
