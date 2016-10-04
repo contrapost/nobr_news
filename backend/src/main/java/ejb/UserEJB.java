@@ -63,10 +63,10 @@ public class UserEJB {
     public List<User> getXTopUsers(int numberOfTopUsers) {
         Query query = em.createNamedQuery(User.GET_TOP_USERS);
         List<User> usersOrderedByNumberOfCommentsAndNewsws = query.getResultList();
-        if(usersOrderedByNumberOfCommentsAndNewsws.size() > numberOfTopUsers) {
+        if(usersOrderedByNumberOfCommentsAndNewsws.size() < numberOfTopUsers) {
             return usersOrderedByNumberOfCommentsAndNewsws;
         } else {
-            return usersOrderedByNumberOfCommentsAndNewsws.subList(0, numberOfTopUsers + 1);
+            return usersOrderedByNumberOfCommentsAndNewsws.subList(0, numberOfTopUsers);
         }
     }
 

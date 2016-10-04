@@ -9,7 +9,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -265,7 +264,7 @@ public class UserTest {
         assertTrue(topUsers.contains(userA));
         assertTrue(topUsers.contains(userC));
         assertFalse(topUsers.contains(userD));
-        assertTrue(topUsers.contains(userB));
+        assertFalse(topUsers.contains(userB));
 
         assertEquals(userA, topUsers.get(0));
     }
