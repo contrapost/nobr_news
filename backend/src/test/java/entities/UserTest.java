@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -254,11 +255,11 @@ public class UserTest {
         Query query = em.createNamedQuery(User.GET_TOP_USERS);
         query.setMaxResults(2); // Test will fail if we call setMaxResults(3)
         List<User> topUsers = query.getResultList(); //Get top 2
-//        Collections.sort(topUsers, (o1, o2) -> {
-//            if(o1.getNewses().size() + o1.getComments().size() == o2.getNewses().size() + o2.getComments().size())
-//                return 0;
-//            return (o1.getNewses().size() + o1.getComments().size()) > (o2.getNewses().size() + o2.getComments().size()) ? -1 : 1;
-//        });
+        Collections.sort(topUsers, (o1, o2) -> {
+            if(o1.getNewses().size() + o1.getComments().size() == o2.getNewses().size() + o2.getComments().size())
+                return 0;
+            return (o1.getNewses().size() + o1.getComments().size()) > (o2.getNewses().size() + o2.getComments().size()) ? -1 : 1;
+        });
 
         assertTrue(topUsers.contains(userA));
         assertTrue(topUsers.contains(userC));
