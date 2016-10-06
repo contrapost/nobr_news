@@ -22,9 +22,7 @@ public class Rating {
     @ManyToMany
     private List<User> voters;
 
-    public Rating() {
-        voters = new ArrayList<>();
-    }
+    public Rating() {}
 
     public long getRatingID() {
         return ratingID;
@@ -39,7 +37,7 @@ public class Rating {
     }
 
     public void vote(Votes vote, User user) {
-        if (voters.stream().map(User::getUserID).anyMatch(id -> id.equals(user.getUserID()))) {
+        if (getVoters().stream().map(User::getUserID).anyMatch(id -> id.equals(user.getUserID()))) {
             return;
         }
         switch (vote) {
@@ -69,6 +67,11 @@ public class Rating {
     }
 
     public List<User> getVoters() {
+
+        if(voters == null) {
+            voters = new ArrayList<>();
+        }
+
         return voters;
     }
 
