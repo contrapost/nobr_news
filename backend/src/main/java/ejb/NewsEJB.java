@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by alexandershipunov on 30/09/16.
@@ -46,5 +47,9 @@ public class NewsEJB {
         Query query = em.createNamedQuery(News.TOTAL_NUMBER_OF_NEWS_FROM_COUNTRY);
         query.setParameter("country", ciuntryName);
         return (long) query.getSingleResult();
+    }
+
+    public List<News> getAllNews() {
+        return em.createNamedQuery(News.GET_ALL_NEWS).getResultList();
     }
 }

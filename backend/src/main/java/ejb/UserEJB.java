@@ -5,6 +5,7 @@ import entities.User;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.validation.constraints.NotNull;
@@ -73,6 +74,7 @@ public class UserEJB {
     private boolean isRegistered(String email) {
 
         Query query = em.createNamedQuery(User.GET_USER_BY_EMAIL);
+        query.setLockMode(LockModeType.PESSIMISTIC_WRITE);
         query.setParameter("email", email);
         List<User> users = query.getResultList();
         return users.size() != 0;

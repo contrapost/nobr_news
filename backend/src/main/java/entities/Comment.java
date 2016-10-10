@@ -20,7 +20,7 @@ public class Comment {
 
     @Id
     @GeneratedValue
-    private Long commentID;
+    private Long ID;
 
     @NotNull
     @Size(min = 1, max = 1000)
@@ -45,12 +45,12 @@ public class Comment {
         rating = new Rating();
     }
 
-    public Long getCommentID() {
-        return commentID;
+    public long getID() {
+        return ID;
     }
 
-    public void setCommentID(Long id) {
-        this.commentID = id;
+    public void setID(Long id) {
+        this.ID = id;
     }
 
     public String getText() {

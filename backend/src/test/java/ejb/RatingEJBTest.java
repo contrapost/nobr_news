@@ -1,9 +1,6 @@
 package ejb;
 
-import entities.Address;
-import entities.Comment;
-import entities.News;
-import entities.User;
+import entities.*;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -20,22 +17,24 @@ import java.util.Date;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Created by alex on 03.10.16.
- *
+ * Created by alexandershipunov on 10/10/2016.
  */
 @RunWith(Arquillian.class)
-public class NewsEJBTest {
+public class RatingEJBTest {
 
     @Deployment
     public static JavaArchive createDeployment() {
 
         return ShrinkWrap.create(JavaArchive.class)
                 .addPackages(true, "ejb")
-                .addClass(DeleterEJB.class)
+                .addPackages(true, "test")
                 .addPackages(true, "entities")
                 .addPackages(true, "org.apache.commons.codec")
                 .addAsResource("META-INF/persistence.xml");
     }
+
+    @EJB
+    private RatingEJB ratingEJB;
 
     @EJB
     private UserEJB userEJB;
@@ -50,23 +49,23 @@ public class NewsEJBTest {
     private DeleterEJB deleterEJB;
 
     @Before
-    public void setUp(){
-        emptyDatabase();
+    public void setUp() {
+        deleterEJB.deleteEntities(News.class);
+        deleterEJB.deleteEntities(Comment.class);
+        deleterEJB.deleteEntities(Rating.class);
+        deleterEJB.deleteEntities(User.class);
         setUserEJBs();
     }
 
     @After
-    public void tearDown(){
-        emptyDatabase();
-    }
-
-    private void emptyDatabase() {
+    public void emptyDatabase() {
         deleterEJB.deleteEntities(News.class);
         deleterEJB.deleteEntities(Comment.class);
+        deleterEJB.deleteEntities(Rating.class);
         deleterEJB.deleteEntities(User.class);
     }
 
-    private void setUserEJBs() {
+    public void setUserEJBs() {
         //Alex's address
         Address addressAlex = new Address();
         addressAlex.setStreet("Street");
@@ -102,43 +101,35 @@ public class NewsEJBTest {
     }
 
     @Test
-    public void testCreateNews() {
-        Address address = new Address();
-        address.setStreet("Street");
-        address.setZipCode("1234");
-        address.setCity("City");
-        address.setCountry("Country");
+    public void testVoteForNews(){
+        News news = newsEJB.createNews(userEJB.getUser("alex@alum.com"), "Text", new Date());
 
-        userEJB.createNewUser("name", "surname", "name@surname.com", "12we34ty", address);
+        ratingEJB.voteForNews(userEJB.getUser("alex@alum.com"), news, Votes.UP );
 
-        newsEJB.createNews(userEJB.getUser("name@surname.com"), "Text", new Date());
+        assertEquals(1, newsEJB.getAllNews().get(0).getRating().getScore());
 
-        assertEquals(1, newsEJB.getNumberOfAllNewses());
+        ratingEJB.voteForNews(userEJB.getUser("bart@blum.com"), news, Votes.UP );
+
+        assertEquals(2, newsEJB.getAllNews().get(0).getRating().getScore());
     }
 
     @Test
-    public void testGetNumberOfNewsFromCountry() {
-        commentEJB.createComment(userEJB.getUser("alex@alum.com"),
-                newsEJB.createNews(userEJB.getUser("alex@alum.com"), "Text of the news here", new Date()),
-                "Comment's text here", new Date());
-        commentEJB.createComment(userEJB.getUser("alex@alum.com"),
-                newsEJB.createNews(userEJB.getUser("alex@alum.com"), "Text of the news here", new Date()),
-                "Comment's text here", new Date());
-        commentEJB.createComment(userEJB.getUser("alex@alum.com"),
-                newsEJB.createNews(userEJB.getUser("bart@blum.com"), "Text of the news here", new Date()),
-                "Comment's text here", new Date());
-        commentEJB.createComment(userEJB.getUser("alex@alum.com"),
-                newsEJB.createNews(userEJB.getUser("conney@clum.com"), "Text of the news here", new Date()),
-                "Comment's text here", new Date());
-        commentEJB.createComment(userEJB.getUser("conney@clum.com"),
-                newsEJB.createNews(userEJB.getUser("conney@clum.com"), "Text of the news here", new Date()),
-                "Comment's text here", new Date());
-        commentEJB.createComment(userEJB.getUser("conney@clum.com"),
-                newsEJB.createNews(userEJB.getUser("den@dlum.com"), "Text of the news here", new Date()),
-                "Comment's text here", new Date());
+    public void testTwoUsersVotesAtTheSameTime() throws InterruptedException {
+        newsEJB.createNews(userEJB.getUser("alex@alum.com"), "Text", new Date());
 
-        //3 newses from Norway (Alex has 2 and Bart has 1)
+        Thread thread = new Thread(() -> {
+            ratingEJB.voteForNews(userEJB.getUser("alex@alum.com"), newsEJB.getAllNews().get(0), Votes.UP );
+            try {
+                Thread.sleep(5_000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
 
-        assertEquals(3, newsEJB.gerNumberOfNewsFromCountry("Norway"));
+        thread.start();
+
+        thread.join();
+
+        assertEquals(1, newsEJB.getAllNews().get(0).getRating().getScore());
     }
 }

@@ -13,17 +13,19 @@ import java.util.List;
  */
 
 @NamedQueries({
+        @NamedQuery(name = News.GET_ALL_NEWS, query = "select n from News n"),
         @NamedQuery(name = News.TOTAL_NUMBER_OF_NEWS, query = "select count(n) from News n"),
         @NamedQuery(name = News.TOTAL_NUMBER_OF_NEWS_FROM_COUNTRY, query = "select count(n) from News n where n.author.address.country = :country")
 })
 @Entity
 public class News {
+    public static final String GET_ALL_NEWS = "GET_ALL_NEWS";
     public static final String TOTAL_NUMBER_OF_NEWS = "TOTAL_NUMBER_OF_NEWS";
     public static final String TOTAL_NUMBER_OF_NEWS_FROM_COUNTRY = "TOTAL_NUMBER_OF_NEWS_FROM_COUNTRY";
 
     @Id
     @GeneratedValue
-    private Long newsID;
+    private Long ID;
 
     @NotNull
     @Size(min = 1, max = 5000)
@@ -48,8 +50,8 @@ public class News {
         rating = new Rating();
     }
 
-    public Long getNewsID() {
-        return newsID;
+    public long getID() {
+        return ID;
     }
 
     public Date getDate() {
@@ -60,8 +62,8 @@ public class News {
         this.date = date;
     }
 
-    public void setNewsID(Long newsID) {
-        this.newsID = newsID;
+    public void setID(Long newsID) {
+        this.ID = newsID;
     }
 
     public String getText() {

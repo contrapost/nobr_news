@@ -30,7 +30,7 @@ public class CommentEJB {
         comment.setText(text);
         comment.setDate(date);
 
-        News foundNews = em.find(News.class, news.getNewsID());
+        News foundNews = em.find(News.class, news.getID());
         User foundUser = em.find(User.class, user.getUserID());
 
         foundNews.getComments().add(comment);

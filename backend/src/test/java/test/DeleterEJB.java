@@ -1,4 +1,4 @@
-package ejb;
+package test;
 
 import javax.ejb.Stateless;
 import javax.persistence.Entity;

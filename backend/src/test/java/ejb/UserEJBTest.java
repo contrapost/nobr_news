@@ -6,12 +6,14 @@ import entities.News;
 import entities.User;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.test.spi.ArquillianProxyException;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import test.DeleterEJB;
 
 import javax.ejb.EJB;
 import java.util.Date;
@@ -21,7 +23,6 @@ import static org.junit.Assert.assertFalse;
 
 /**
  * Created by alexandershipunov on 30/09/16.
- *
  */
 @RunWith(Arquillian.class)
 public class UserEJBTest {
@@ -51,7 +52,7 @@ public class UserEJBTest {
     private DeleterEJB deleterEJB;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         deleterEJB.deleteEntities(News.class);
         deleterEJB.deleteEntities(Comment.class);
         deleterEJB.deleteEntities(User.class);
@@ -59,13 +60,13 @@ public class UserEJBTest {
     }
 
     @After
-    public void emptyDatabase(){
+    public void emptyDatabase() {
         deleterEJB.deleteEntities(News.class);
         deleterEJB.deleteEntities(Comment.class);
         deleterEJB.deleteEntities(User.class);
     }
 
-    public void setUserEJBs(){
+    public void setUserEJBs() {
         //Alex's address
         Address addressAlex = new Address();
         addressAlex.setStreet("Street");
@@ -101,7 +102,7 @@ public class UserEJBTest {
     }
 
     @Test
-    public void testCreateUser(){
+    public void testCreateUser() {
         Address address = new Address();
         address.setStreet("Street");
         address.setZipCode("1234");
@@ -163,4 +164,68 @@ public class UserEJBTest {
         assertFalse(userEJB.getXTopUsers(2).stream().anyMatch(user -> "bart@blum.com".equals(user.getEmail())));
     }
 
+    @Test(expected = ArquillianProxyException.class)
+    public void testUserConstraint() {
+        Address address = new Address();
+        address.setStreet("Street");
+        address.setZipCode("1234");
+        address.setCity("City");
+        address.setCountry("Country");
+
+        userEJB.createNewUser(null, "surname", "name@surname.com", "12we34ty", address);
+    }
+
+    @Test
+    public void testCreateUsersWithSameEmail() throws InterruptedException {
+        //Two threads tries to create two users with the same email address
+        Thread threadA = new Thread(() -> {
+            createUser();
+        });
+
+        Thread threadB = new Thread(() -> {
+            createUser();
+        });
+
+        threadA.start();
+        threadB.start();
+
+//        Thread.sleep(5_000);
+
+        threadA.join();
+        threadB.join();
+        //Four users have been created before in setUp()
+        assertEquals(5, userEJB.getNumberOfAllUsers());
+
+        //Two threads tries to create two users with different email addresses
+        Thread threadC = new Thread(() -> {
+            userEJB.createNewUser("name", "surname", "name1@surname.com", "12we34ty", createAddress());
+        });
+
+        Thread threadD = new Thread(() -> {
+            userEJB.createNewUser("name", "surname", "name2@surname.com", "12we34ty", createAddress());
+        });
+
+        threadC.start();
+        threadD.start();
+
+//        Thread.sleep(5_000);
+
+        threadC.join();
+        threadD.join();
+        assertEquals(7, userEJB.getNumberOfAllUsers());
+    }
+
+    private void createUser() {
+        userEJB.createNewUser("name", "surname", "name@surname.com", "12we34ty", createAddress());
+    }
+
+    private Address createAddress() {
+        Address address = new Address();
+        address.setStreet("Street");
+        address.setZipCode("1234");
+        address.setCity("City");
+        address.setCountry("Country");
+
+        return address;
+    }
 }
