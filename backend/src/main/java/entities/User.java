@@ -1,5 +1,7 @@
 package entities;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -41,6 +43,30 @@ public class User {
     @Pattern(regexp =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
     private String email;
+
+    @NotEmpty
+    private String hash;
+
+    public String getHash() {
+        return hash;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    @NotEmpty
+    @Size(max = 26)
+
+    private String salt;
 
     @NotNull
     @Size(min = 6, max = 100)

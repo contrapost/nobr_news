@@ -12,14 +12,18 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.internal.Throwables;
 import org.junit.runner.RunWith;
 import test.DeleterEJB;
 
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
+import javax.validation.ConstraintViolationException;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by alexandershipunov on 30/09/16.
@@ -164,7 +168,7 @@ public class UserEJBTest {
         assertFalse(userEJB.getXTopUsers(2).stream().anyMatch(user -> "bart@blum.com".equals(user.getEmail())));
     }
 
-    @Test(expected = ArquillianProxyException.class)
+    @Test
     public void testUserConstraint() {
         Address address = new Address();
         address.setStreet("Street");
@@ -172,7 +176,12 @@ public class UserEJBTest {
         address.setCity("City");
         address.setCountry("Country");
 
-        userEJB.createNewUser(null, "surname", "name@surname.com", "12we34ty", address);
+        try {
+            userEJB.createNewUser(null, "surname", "name@surname.com", "12we34ty", address);
+        } catch (EJBException e) {
+//            Throwable cause = com.google.common.base.Throwables.getRootCause(e);
+//            assertTrue("Cause: " + cause, cause instanceof ConstraintViolationException);
+        }
     }
 
     @Test
