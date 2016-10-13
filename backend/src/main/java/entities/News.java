@@ -23,6 +23,9 @@ public class News {
     public static final String TOTAL_NUMBER_OF_NEWS = "TOTAL_NUMBER_OF_NEWS";
     public static final String TOTAL_NUMBER_OF_NEWS_FROM_COUNTRY = "TOTAL_NUMBER_OF_NEWS_FROM_COUNTRY";
 
+    @Version
+    private Integer version;
+
     @Id
     @GeneratedValue
     private Long ID;

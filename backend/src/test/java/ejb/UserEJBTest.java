@@ -178,18 +178,15 @@ public class UserEJBTest {
     @Test
     public void testCreateUsersWithSameEmail() throws InterruptedException {
         //Two threads tries to create two users with the same email address
-        Thread threadA = new Thread(() -> {
-            createUser();
-        });
+        Thread threadA = new Thread(this::createUser);
 
-        Thread threadB = new Thread(() -> {
-            createUser();
-        });
+        Thread threadB = new Thread(this::createUser);
 
         threadA.start();
         threadB.start();
 
-//        Thread.sleep(5_000);
+        Thread.sleep(5_000);
+        assertEquals(5, userEJB.getNumberOfAllUsers());
 
         threadA.join();
         threadB.join();
@@ -207,8 +204,6 @@ public class UserEJBTest {
 
         threadC.start();
         threadD.start();
-
-//        Thread.sleep(5_000);
 
         threadC.join();
         threadD.join();

@@ -18,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * Created by alexandershipunov on 10/10/2016.
+ *
  */
 @RunWith(Arquillian.class)
 public class RatingEJBTest {
@@ -55,6 +56,7 @@ public class RatingEJBTest {
         deleterEJB.deleteEntities(Rating.class);
         deleterEJB.deleteEntities(User.class);
         setUserEJBs();
+        newsEJB.createNews(userEJB.getUser("alex@alum.com"), "Text", new Date());
     }
 
     @After
@@ -102,7 +104,7 @@ public class RatingEJBTest {
 
     @Test
     public void testVoteForNews(){
-        News news = newsEJB.createNews(userEJB.getUser("alex@alum.com"), "Text", new Date());
+        News news = newsEJB.getAllNews().get(0);
 
         ratingEJB.voteForNews(userEJB.getUser("alex@alum.com"), news, Votes.UP );
 
@@ -115,21 +117,34 @@ public class RatingEJBTest {
 
     @Test
     public void testTwoUsersVotesAtTheSameTime() throws InterruptedException {
-        newsEJB.createNews(userEJB.getUser("alex@alum.com"), "Text", new Date());
 
-        Thread thread = new Thread(() -> {
+        Thread threadA = new Thread(() -> {
+            try {
+                Thread.sleep(4_000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             ratingEJB.voteForNews(userEJB.getUser("alex@alum.com"), newsEJB.getAllNews().get(0), Votes.UP );
+        });
+
+        Thread threadB = new Thread(() -> {
             try {
                 Thread.sleep(5_000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            ratingEJB.voteForNews(userEJB.getUser("bart@blum.com"), newsEJB.getAllNews().get(0), Votes.UP);
         });
 
-        thread.start();
+        threadA.start();
+        threadB.start();
 
-        thread.join();
+        threadA.join();
 
         assertEquals(1, newsEJB.getAllNews().get(0).getRating().getScore());
+
+        threadB.join();
+
+        assertEquals(2, newsEJB.getAllNews().get(0).getRating().getScore());
     }
 }
