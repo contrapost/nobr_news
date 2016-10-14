@@ -66,7 +66,7 @@ public class CommentEJBTest {
         address.setCity("City");
         address.setCountry("Country");
 
-        userEJB.createNewUser("name", "surname", "name@surname.com", "12we34ty", address);
+        userEJB.createUser("name", "surname", "name@surname.com", "12we34ty", address);
 
         commentEJB.createComment(userEJB.getUser("name@surname.com"),
                 newsEJB.createNews(userEJB.getUser("name@surname.com"), "Text of the news here", new Date()),

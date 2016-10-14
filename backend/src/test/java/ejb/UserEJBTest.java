@@ -99,10 +99,10 @@ public class UserEJBTest {
         addressDen.setCity("City");
         addressDen.setCountry("Babel");
 
-        userEJB.createNewUser("Alex", "Alum", "alex@alum.com", "12we34ty", addressAlex);
-        userEJB.createNewUser("Bart", "Blum", "bart@blum.com", "12we34ty", addressBart);
-        userEJB.createNewUser("Conney", "Clum", "conney@clum.com", "12we34ty", addressConney);
-        userEJB.createNewUser("Den", "Dlum", "den@dlum.com", "12we34ty", addressDen);
+        userEJB.createUser("Alex", "Alum", "alex@alum.com", "12we34ty", addressAlex);
+        userEJB.createUser("Bart", "Blum", "bart@blum.com", "12we34ty", addressBart);
+        userEJB.createUser("Conney", "Clum", "conney@clum.com", "12we34ty", addressConney);
+        userEJB.createUser("Den", "Dlum", "den@dlum.com", "12we34ty", addressDen);
     }
 
     @Test
@@ -113,7 +113,7 @@ public class UserEJBTest {
         address.setCity("City");
         address.setCountry("Country");
 
-        userEJB.createNewUser("name", "surname", "name@surname.com", "12we34ty", address);
+        userEJB.createUser("name", "surname", "name@surname.com", "12we34ty", address);
 
         //Four users have been created before in setUp()
         assertEquals(5, userEJB.getNumberOfAllUsers());
@@ -139,23 +139,23 @@ public class UserEJBTest {
 
     @Test
     public void testGetXTopUsers() {
-        commentEJB.createComment(userEJB.getUser("alex@alum.com"),
-                newsEJB.createNews(userEJB.getUser("alex@alum.com"), "Text of the news here", new Date()),
+        commentEJB.createComment((User)userEJB.getUser("alex@alum.com"),
+                newsEJB.createNews((User)userEJB.getUser("alex@alum.com"), "Text of the news here", new Date()),
                 "Comment's text here", new Date());
-        commentEJB.createComment(userEJB.getUser("alex@alum.com"),
-                newsEJB.createNews(userEJB.getUser("alex@alum.com"), "Text of the news here", new Date()),
+        commentEJB.createComment((User)userEJB.getUser("alex@alum.com"),
+                newsEJB.createNews((User)userEJB.getUser("alex@alum.com"), "Text of the news here", new Date()),
                 "Comment's text here", new Date());
-        commentEJB.createComment(userEJB.getUser("alex@alum.com"),
-                newsEJB.createNews(userEJB.getUser("bart@blum.com"), "Text of the news here", new Date()),
+        commentEJB.createComment((User)userEJB.getUser("alex@alum.com"),
+                newsEJB.createNews((User)userEJB.getUser("bart@blum.com"), "Text of the news here", new Date()),
                 "Comment's text here", new Date());
-        commentEJB.createComment(userEJB.getUser("alex@alum.com"),
-                newsEJB.createNews(userEJB.getUser("conney@clum.com"), "Text of the news here", new Date()),
+        commentEJB.createComment((User)userEJB.getUser("alex@alum.com"),
+                newsEJB.createNews((User)userEJB.getUser("conney@clum.com"), "Text of the news here", new Date()),
                 "Comment's text here", new Date());
-        commentEJB.createComment(userEJB.getUser("conney@clum.com"),
-                newsEJB.createNews(userEJB.getUser("conney@clum.com"), "Text of the news here", new Date()),
+        commentEJB.createComment((User)userEJB.getUser("conney@clum.com"),
+                newsEJB.createNews((User)userEJB.getUser("conney@clum.com"), "Text of the news here", new Date()),
                 "Comment's text here", new Date());
-        commentEJB.createComment(userEJB.getUser("conney@clum.com"),
-                newsEJB.createNews(userEJB.getUser("den@dlum.com"), "Text of the news here", new Date()),
+        commentEJB.createComment((User)userEJB.getUser("conney@clum.com"),
+                newsEJB.createNews((User)userEJB.getUser("den@dlum.com"), "Text of the news here", new Date()),
                 "Comment's text here", new Date());
 
         //Alex has 2 newses and 4 comments, Conney has 2 newses and 2 comments, Bart has 1 news, Den has 1 news
@@ -204,11 +204,11 @@ public class UserEJBTest {
 
         //Two threads tries to create two users with different email addresses
         Thread threadC = new Thread(() -> {
-            userEJB.createNewUser("name", "surname", "name1@surname.com", "12we34ty", createAddress());
+            userEJB.createUser("name", "surname", "name1@surname.com", "12we34ty", createAddress());
         });
 
         Thread threadD = new Thread(() -> {
-            userEJB.createNewUser("name", "surname", "name2@surname.com", "12we34ty", createAddress());
+            userEJB.createUser("name", "surname", "name2@surname.com", "12we34ty", createAddress());
         });
 
         threadC.start();
@@ -220,7 +220,7 @@ public class UserEJBTest {
     }
 
     private void createUser() {
-        userEJB.createNewUser("name", "surname", "name@surname.com", "12we34ty", createAddress());
+        userEJB.createUser("name", "surname", "name@surname.com", "12we34ty", createAddress());
     }
 
     private Address createAddress() {

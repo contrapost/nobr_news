@@ -139,7 +139,7 @@ public class LoggingController implements Serializable {
     }
 
     public User getUser() {
-        return userEJB.getUser(registeredUserEmail);
+        return (User) userEJB.getUser(registeredUserEmail);
     }
 
     public String logOut() {

@@ -38,6 +38,8 @@ public class RatingTest {
         user.getAddress().setCountry("Norway");
         user.setEmail("alex@aurum.com");
         user.setPassword("er78dfe");
+        user.setHash("hash");
+        user.setSalt("salt");
 
         news = new News();
         news.setText("NewsA");
@@ -88,6 +90,8 @@ public class RatingTest {
         user2.getAddress().setCountry("Norway");
         user2.setEmail("alex@aurum.com");
         user2.setPassword("er78dfe");
+        user2.setHash("hash");
+        user2.setSalt("salt");
 
         News foundNews = em.find(News.class, news.getID());
         foundNews.getRating().vote(antherVote, user2);
@@ -146,6 +150,8 @@ public class RatingTest {
         user2.getAddress().setCountry("Norway");
         user2.setEmail("alex@aurum.com");
         user2.setPassword("er78dfe");
+        user2.setHash("hash");
+        user2.setSalt("salt");
 
         foundComment.getRating().vote(Votes.UP, user2);
 
@@ -213,6 +219,8 @@ public class RatingTest {
         user2.getAddress().setCountry("Norway");
         user2.setEmail("alex@aurum.com");
         user2.setPassword("er78dfe");
+        user2.setHash("hash");
+        user2.setSalt("salt");
 
         againFoundNews.getRating().vote(Votes.UP, user2);
 

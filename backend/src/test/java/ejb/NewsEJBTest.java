@@ -95,10 +95,10 @@ public class NewsEJBTest {
         addressDen.setCity("City");
         addressDen.setCountry("Babel");
 
-        userEJB.createNewUser("Alex", "Alum", "alex@alum.com", "12we34ty", addressAlex);
-        userEJB.createNewUser("Bart", "Blum", "bart@blum.com", "12we34ty", addressBart);
-        userEJB.createNewUser("Conney", "Clum", "conney@clum.com", "12we34ty", addressConney);
-        userEJB.createNewUser("Den", "Dlum", "den@dlum.com", "12we34ty", addressDen);
+        userEJB.createUser("Alex", "Alum", "alex@alum.com", "12we34ty", addressAlex);
+        userEJB.createUser("Bart", "Blum", "bart@blum.com", "12we34ty", addressBart);
+        userEJB.createUser("Conney", "Clum", "conney@clum.com", "12we34ty", addressConney);
+        userEJB.createUser("Den", "Dlum", "den@dlum.com", "12we34ty", addressDen);
     }
 
     @Test
@@ -109,9 +109,9 @@ public class NewsEJBTest {
         address.setCity("City");
         address.setCountry("Country");
 
-        userEJB.createNewUser("name", "surname", "name@surname.com", "12we34ty", address);
+        userEJB.createUser("name", "surname", "name@surname.com", "12we34ty", address);
 
-        newsEJB.createNews(userEJB.getUser("name@surname.com"), "Text", new Date());
+        newsEJB.createNews((User) userEJB.getUser("name@surname.com"), "Text", new Date());
 
         assertEquals(1, newsEJB.getNumberOfAllNewses());
     }

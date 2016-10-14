@@ -42,15 +42,18 @@ public class UserEJB {
     }
 
     public boolean createUser(@NotNull String name, @NotNull String surname, @NotNull String email, @NotNull String password, @NotNull Address address) {
+        if(isRegistered(email)) {
+            return false;
+        }
+
         if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
             return false;
         }
 
-//        User user = getUser(email);
-//        if (user != null) {
-//            //a user with same id already exists
-//            return false;
-//        }
+        if (getUser(email) != null) {
+            //a user with same id already exists
+            return false;
+        }
 
         User user = new User();
         user.setEmail(email);
@@ -77,27 +80,23 @@ public class UserEJB {
             return false;
         }
 
-        User userDetails = getUser(email);
-        if (userDetails == null) {
+
+        if (getUser(email) == null) {
             return false;
         }
 
+        User userDetails = (User) getUser(email);
+
         String hash = computeHash(password, userDetails.getSalt());
 
-        boolean isOK = hash.equals(userDetails.getHash());
-        return isOK;
+        return hash.equals(userDetails.getHash());
     }
 
     public User getUser(String email) {
         Query query = em.createNamedQuery(User.GET_USER_BY_EMAIL);
         query.setParameter("email", email);
-        User user = null;
-        try {
-            user = (User) query.getSingleResult();
-        } catch (javax.ejb.EJBException e) {
-            return null;
-        }
-        return user;
+        if (query.getResultList().isEmpty()) return null;
+        return (User) query.getResultList().get(0);
     }
 
     public List<String> getAllCountries() {

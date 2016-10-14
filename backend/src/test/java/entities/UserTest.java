@@ -102,6 +102,8 @@ public class UserTest {
         userA.getAddress().setCountry("Norway");
         userA.setEmail("alex@aurum.com");
         userA.setPassword("er78dfe");
+        userA.setHash("hash");
+        userA.setSalt("salt");
 
         userB = new User();
         userB.setName("Bob");
@@ -112,6 +114,8 @@ public class UserTest {
         userB.getAddress().setCountry("Spain");
         userB.setEmail("bob@brom.com");
         userB.setPassword("er78dfe");
+        userB.setHash("hash");
+        userB.setSalt("salt");
 
         userC = new User();
         userC.setName("Chris");
@@ -122,6 +126,8 @@ public class UserTest {
         userC.getAddress().setCountry("Norway");
         userC.setEmail("chris@chlor.com");
         userC.setPassword("er78dfe");
+        userC.setHash("hash");
+        userC.setSalt("salt");
 
         userD = new User();
         userD.setName("David");
@@ -132,6 +138,8 @@ public class UserTest {
         userD.getAddress().setCountry("England");
         userD.setEmail("david@doom.com");
         userD.setPassword("er78dfe");
+        userD.setHash("hash");
+        userD.setSalt("salt");
     }
 
     private void setNewses() {

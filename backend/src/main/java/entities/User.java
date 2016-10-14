@@ -65,7 +65,6 @@ public class User {
 
     @NotEmpty
     @Size(max = 26)
-
     private String salt;
 
     @NotNull

@@ -25,6 +25,7 @@ import static org.junit.Assert.assertNull;
 
 /**
  * Created by alexandershipunov on 13/10/2016.
+ *
  */
 @RunWith(Arquillian.class)
 public class StatisticEJBTest {
@@ -99,10 +100,10 @@ public class StatisticEJBTest {
         addressDen.setCity("City");
         addressDen.setCountry("Babel");
 
-        userEJB.createNewUser("Alex", "Alum", "alex@alum.com", "12we34ty", addressAlex);
-        userEJB.createNewUser("Bart", "Blum", "bart@blum.com", "12we34ty", addressBart);
-        userEJB.createNewUser("Conney", "Clum", "conney@clum.com", "12we34ty", addressConney);
-        userEJB.createNewUser("Den", "Dlum", "den@dlum.com", "12we34ty", addressDen);
+        userEJB.createUser("Alex", "Alum", "alex@alum.com", "12we34ty", addressAlex);
+        userEJB.createUser("Bart", "Blum", "bart@blum.com", "12we34ty", addressBart);
+        userEJB.createUser("Conney", "Clum", "conney@clum.com", "12we34ty", addressConney);
+        userEJB.createUser("Den", "Dlum", "den@dlum.com", "12we34ty", addressDen);
     }
 
     @Test
@@ -113,7 +114,7 @@ public class StatisticEJBTest {
 
         assertEquals(0L, statisticEJB.getFromCache("NumberOfAllNews"));
 
-        newsEJB.createNews(userEJB.getUser("alex@alum.com"), "Text", new Date());
+        newsEJB.createNews((User)userEJB.getUser("alex@alum.com"), "Text", new Date());
 
         statisticEJB.getFromCache("NumberOfAllNews");
 
