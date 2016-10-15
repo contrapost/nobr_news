@@ -50,22 +50,29 @@
                         <f:facet name="header">News ID</f:facet>
                         <h:outputText value="#{news.ID}"/>
                     </h:column>
+                    <h:column>
+                        <f:facet name="header">Comment</f:facet>
+                        <h:form>
+                            <h:commandButton value="Comments" action="#{commentsController.saveNewsID(news.ID)}" id="commentsBtn">
+                            </h:commandButton>
+                        </h:form>
+                    </h:column>
+                    <c:if test="#{news.comments.size != 0}" >
+                        <h:column>
+                            <f:facet name="header">Number of comments</f:facet>
+                            <h:outputText value="#{news.comments.size}"/>
+                        </h:column>
+                    </c:if>
 
                     <c:if test="#{loggingController.loggedIn}">
                         <h:column>
-                            <f:facet name="header">Comment</f:facet>
-                            <h:button value="Comments" action="#{commentsController.getComments}" outcome="comments" id="commentsBtn">
-                                <f:param name="newsID" value="#{news.ID}" />
-                            </h:button>
-                        </h:column>
-                        <h:column>
                             <f:facet name="header">Vote</f:facet>
-                            <!--<h:button value="+" onclick="submit()"-->
-                                      <!--valueChangeListener="#{newsController.vote(1, news.ID, loggingController.registeredUserEmail)}"-->
-                                      <!--id="upvoteBtn"/>-->
-                            <!--<h:button value="-" onclick="submit()"-->
-                                      <!--valueChangeListener="#{newsController.vote(-1, news.ID, loggingController.registeredUserEmail)}"-->
-                                      <!--id="downvoteBtn"/>-->
+                            <h:button value="+" onclick="submit()"
+                                      valueChangeListener="#{newsController.vote(1, news.ID, loggingController.registeredUserEmail)}"
+                                      id="upvoteBtn"/>
+                            <h:button value="-" onclick="submit()"
+                                      valueChangeListener="#{newsController.vote(-1, news.ID, loggingController.registeredUserEmail)}"
+                                      id="downvoteBtn"/>
                         </h:column>
                     </c:if>
                 </h:dataTable>

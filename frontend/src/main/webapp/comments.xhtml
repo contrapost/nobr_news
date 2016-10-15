@@ -29,9 +29,12 @@
 <c:if test="#{loggingController.loggedIn}">
     <h:column>
         <f:facet name="header">Comment</f:facet>
-        <h:button value="Create comment" outcome="newComment" id="newCommentBtn">
-            <f:param name="newsID" value="#{commentsController.news.ID}" />
-        </h:button>
+        <h:form>
+            <h:commandButton value="Create comment" action="#{createCommentController.saveNewsID(commentsController.news.ID)}" id="newCommentBtn">
+            </h:commandButton>
+        </h:form>
     </h:column>
 </c:if>
+
+<h:button value="Back to main" outcome="home.jsf" />
 </html>
