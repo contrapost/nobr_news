@@ -49,6 +49,10 @@ public class NewsEJB {
         return (long) query.getSingleResult();
     }
 
+    public News getNews(long id) {
+        return em.find(News.class, id);
+    }
+
     public List<News> getAllNews() {
         return em.createNamedQuery(News.GET_ALL_NEWS).getResultList();
     }

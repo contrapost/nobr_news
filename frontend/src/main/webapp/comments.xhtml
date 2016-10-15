@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:action="http://java.sun.com/jsf/composite">
+
+<h:dataTable value="#{commentsController.news.comments}" var="comment" border="1" id="commentTable">
+    <h:column>
+        <f:facet name="header">Author</f:facet>
+        <h:outputText value="#{comment.author.name}"/>
+    </h:column>
+    <h:column>
+        <f:facet name="header">Text</f:facet>
+        <h:outputText value="#{comment.text}"/>
+    </h:column>
+    <h:column>
+        <f:facet name="header">Date</f:facet>
+        <h:outputText value="#{comment.date}"/>
+    </h:column>
+    <h:column>
+        <f:facet name="header">Rating</f:facet>
+        <h:outputText value="#{comment.rating.score}"/>
+    </h:column>
+</h:dataTable>
+
+<c:if test="#{loggingController.loggedIn}">
+    <h:column>
+        <f:facet name="header">Comment</f:facet>
+        <h:button value="Create comment" outcome="newComment" id="newCommentBtn">
+            <f:param name="newsID" value="#{commentsController.news.ID}" />
+        </h:button>
+    </h:column>
+</c:if>
+</html>

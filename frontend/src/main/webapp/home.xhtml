@@ -10,60 +10,62 @@
 
 <ui:composition template="layout.xhtml">
 
-    <ui:define name="title">NOBR_NEWS</ui:define>
+    <ui:define name="title">NOBR_NEWS HOME PAGE</ui:define>
 
     <ui:define name="content">
 
 
         <c:if test="#{loggingController.loggedIn}">
-            <h:button value="Create Event" outcome="newEvent.xhtml" id="createEvent"/>
+            <h:button value="Create News" outcome="newNews.xhtml" id="createNews"/>
         </c:if>
 
 
-        <h2>Future Events</h2>
-
-        <c:if test="#{loggingController.loggedIn}">
-            <h:form id="showOnlyOwnCountryForm">
-                <h:selectBooleanCheckbox value="#{eventController.showOnlyOwnCountry}"
-                                         id="showOnlyOwnCountry" onclick="submit()"/>
-                <h:outputLabel for="showOnlyOwnCountry" value="Only #{loggingController.userCountry}"/>
-            </h:form>
-        </c:if>
+        <h2>News list</h2>
 
         <c:choose>
-            <c:when test="#{eventController.events.size() == 0}">
-                <h:outputText value="No events yet :( Be the first to create one!"/>
+            <c:when test="#{newsController.newses.size() == 0}">
+                <h:outputText value="No newses yet :( Be the first to create one!"/>
             </c:when>
 
             <c:otherwise>
 
-                <h:dataTable value="#{eventController.events}" var="event" border="1" id="eventTable">
+                <h:dataTable value="#{newsController.newses}" var="news" border="1" id="newsTable">
                     <h:column>
-                        <f:facet name="header">Country</f:facet>
-                        <h:outputText value="#{event.country}"/>
+                        <f:facet name="header">Author</f:facet>
+                        <h:outputText value="#{news.author.name}"/>
                     </h:column>
                     <h:column>
-                        <f:facet name="header">Title</f:facet>
-                        <h:outputText value="#{event.title}"/>
+                        <f:facet name="header">Text</f:facet>
+                        <h:outputText value="#{news.text}"/>
                     </h:column>
                     <h:column>
-                        <f:facet name="header">Location</f:facet>
-                        <h:outputText value="#{event.location}"/>
+                        <f:facet name="header">Date</f:facet>
+                        <h:outputText value="#{news.date}"/>
                     </h:column>
                     <h:column>
-                        <f:facet name="header">Participants</f:facet>
-                        <h:outputText value="#{fn:length(event.attendingUsers)}"/>
+                        <f:facet name="header">Rating</f:facet>
+                        <h:outputText value="#{news.rating.score}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">News ID</f:facet>
+                        <h:outputText value="#{news.ID}"/>
                     </h:column>
 
                     <c:if test="#{loggingController.loggedIn}">
                         <h:column>
-                            <f:facet name="header">Going</f:facet>
-                            <h:form>
-                                <h:selectBooleanCheckbox
-                                        value="#{eventController.attendMap[event.id]}"
-                                        onclick="submit()"
-                                        valueChangeListener="#{eventController.updateAttendance(event.id, ! eventController.attendMap[event.id])}"/>
-                            </h:form>
+                            <f:facet name="header">Comment</f:facet>
+                            <h:button value="Comments" action="#{commentsController.getComments}" outcome="comments" id="commentsBtn">
+                                <f:param name="newsID" value="#{news.ID}" />
+                            </h:button>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Vote</f:facet>
+                            <!--<h:button value="+" onclick="submit()"-->
+                                      <!--valueChangeListener="#{newsController.vote(1, news.ID, loggingController.registeredUserEmail)}"-->
+                                      <!--id="upvoteBtn"/>-->
+                            <!--<h:button value="-" onclick="submit()"-->
+                                      <!--valueChangeListener="#{newsController.vote(-1, news.ID, loggingController.registeredUserEmail)}"-->
+                                      <!--id="downvoteBtn"/>-->
                         </h:column>
                     </c:if>
                 </h:dataTable>

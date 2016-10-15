@@ -177,7 +177,7 @@ public class UserEJBTest {
         address.setCountry("Country");
 
         try {
-            userEJB.createNewUser(null, "surname", "name@surname.com", "12we34ty", address);
+            userEJB.createUser(null, "surname", "name@surname.com", "12we34ty", address);
         } catch (EJBException e) {
 //            Throwable cause = com.google.common.base.Throwables.getRootCause(e);
 //            assertTrue("Cause: " + cause, cause instanceof ConstraintViolationException);
