@@ -6,35 +6,56 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core"
       xmlns:action="http://java.sun.com/jsf/composite">
+<ui:composition template="layout.xhtml">
+    <ui:define name="title">Comments for news #{commentsController.news.ID}</ui:define>
+    <ui:define name="content">
+        <h:dataTable value="#{commentsController.news.comments}" var="comment" border="1" id="commentTable">
+            <h:column>
+                <f:facet name="header">Author</f:facet>
+                <h:outputText value="#{comment.author.name}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Text</f:facet>
+                <h:outputText value="#{comment.text}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Date</f:facet>
+                <h:outputText value="#{comment.date}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Rating</f:facet>
+                <h:outputText value="#{comment.rating.score}"/>
+            </h:column>
+            <!--TODO: Doesn't implement in RatingEJB-->
+            <!--<c:if test="#{loggingController.loggedIn}">
+                <h:column>
+                    <f:facet name="header">Vote</f:facet>
+                    <h:form>
+                        <h:commandButton value="+"
+                                         action="#{commentsController.vote(1, comment.ID, loggingController.registeredUserEmail)}"
+                                         id="upvoteBtn"/>
+                    </h:form>
+                    <h:form>
+                        <h:commandButton value="-"
+                                         action="#{commentsController.vote(-1, comment.ID, loggingController.registeredUserEmail)}"
+                                         id="downvoteBtn"/>
+                    </h:form>
+                </h:column>
+            </c:if>-->
+        </h:dataTable>
 
-<h:dataTable value="#{commentsController.news.comments}" var="comment" border="1" id="commentTable">
-    <h:column>
-        <f:facet name="header">Author</f:facet>
-        <h:outputText value="#{comment.author.name}"/>
-    </h:column>
-    <h:column>
-        <f:facet name="header">Text</f:facet>
-        <h:outputText value="#{comment.text}"/>
-    </h:column>
-    <h:column>
-        <f:facet name="header">Date</f:facet>
-        <h:outputText value="#{comment.date}"/>
-    </h:column>
-    <h:column>
-        <f:facet name="header">Rating</f:facet>
-        <h:outputText value="#{comment.rating.score}"/>
-    </h:column>
-</h:dataTable>
+        <c:if test="#{loggingController.loggedIn}">
+            <h:column>
+                <f:facet name="header">Comment</f:facet>
+                <h:form>
+                    <h:commandButton value="Create comment" action="#{createCommentController.saveNewsID(commentsController.news.ID)}" id="newCommentBtn">
+                    </h:commandButton>
+                </h:form>
+            </h:column>
+        </c:if>
 
-<c:if test="#{loggingController.loggedIn}">
-    <h:column>
-        <f:facet name="header">Comment</f:facet>
-        <h:form>
-            <h:commandButton value="Create comment" action="#{createCommentController.saveNewsID(commentsController.news.ID)}" id="newCommentBtn">
-            </h:commandButton>
-        </h:form>
-    </h:column>
-</c:if>
+        <h:button value="Back to main" outcome="home.jsf" />
+    </ui:define>
+</ui:composition>
 
-<h:button value="Back to main" outcome="home.jsf" />
 </html>

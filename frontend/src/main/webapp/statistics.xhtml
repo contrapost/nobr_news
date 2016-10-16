@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core">
+<ui:composition template="layout.xhtml">
+    <ui:define name="title">NOBR_NEWS statistics</ui:define>
+    <ui:define name="content">
+        <p> Top 10 users: </p>
+        <ol>
+            <c:forEach items="#{statisticsController.topTenUsers}" var="user">
+
+                <li>
+                    #{user.userID} #{user.name} #{user.surname}
+                </li>
+
+            </c:forEach>
+        </ol>
+        <p> Our users are from following countries:</p>
+        <ol>
+            <c:forEach items="#{statisticsController.listOfAllCountries}" var="country">
+                <li>
+                    <h:outputText value="#{country}"/>
+                </li>
+            </c:forEach>
+        </ol>
+        <p>Number of all users: #{statisticsController.numberOfAllUsers}</p>
+        <p>Number of all news: #{statisticsController.numberOfAllNews}</p>
+    </ui:define>
+</ui:composition>
+</html>

@@ -8,39 +8,42 @@
 
 
 <h:head>
-  <title>
-    <ui:insert name="title">Default title</ui:insert>
-  </title>
+    <title>
+        <ui:insert name="title">Default title</ui:insert>
+    </title>
 </h:head>
 
 
 <h:body>
 
-  <h:outputText value="NOBR NEWS" />
-  <hr/>
+    <h:outputText value="NOBR NEWS"/>
+    <hr/>
 
-  <c:choose>
-    <c:when test="#{loggingController.loggedIn}">
-      <h:outputText value="Hi #{loggingController.registeredUserEmail}!  " id="welcomeMessage"/>
-      <h:form id="logoutForm">
-        <h:commandButton value="Log Out" action="#{loggingController.logOut}" id="logout" />
-      </h:form>
-    </c:when>
-    <c:otherwise>
-      <h:outputText value="Not logged in  "/>
-      <h:button value="Log In" outcome="login.xhtml" id="login"/>
-    </c:otherwise>
-  </c:choose>
+    <c:choose>
+        <c:when test="#{loggingController.loggedIn}">
+            <h:outputText value="Hi #{loggingController.registeredUserEmail}!  " id="welcomeMessage"/>
+            <h:form id="logoutForm">
+                <h:commandButton value="Log Out" action="#{loggingController.logOut}" id="logout"/>
+            </h:form>
+        </c:when>
+        <c:otherwise>
+            <h:outputText value="Not logged in  "/>
+            <h:button value="Log In" outcome="login.xhtml" id="login"/>
+        </c:otherwise>
+    </c:choose>
 
-  <h1>
-    <ui:insert name="title">Default title</ui:insert>
-  </h1>
-  <hr/>
+    <h1>
+        <ui:insert name="title">Default title</ui:insert>
+    </h1>
+    <hr/>
 
 
-  <ui:insert name="content">Default content</ui:insert>
+    <ui:insert name="content">Default content</ui:insert>
 
-  <hr/>
+    <hr/>
 
+    <p>
+        <h:button value="NOBR_NEWS MAIN" outcome="home.xhtml"></h:button>
+    </p>
 </h:body>
 </html>

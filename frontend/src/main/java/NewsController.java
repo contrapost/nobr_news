@@ -35,7 +35,11 @@ public class NewsController implements Serializable {
         return newsEJB.getAllNews();
     }
 
-    public void vote(int i, long id, String userEmail) {
+    public boolean hasComments(long id) {
+        return !newsEJB.getNews(id).getComments().isEmpty();
+    }
+
+    public String vote(int i, long id, String userEmail) {
         switch (i) {
             case 1:
                 ratingEJB.voteForNews(userEJB.getUser(userEmail), newsEJB.getNews(id), Votes.UP);
@@ -46,5 +50,6 @@ public class NewsController implements Serializable {
             default:
                 break;
         }
+        return "home.jsf";
     }
 }

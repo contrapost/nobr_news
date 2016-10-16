@@ -18,14 +18,6 @@ public class CreateNewsController {
 
     private String formText;
 
-    public String getFormText() {
-        return formText;
-    }
-
-    public void setFormText(String formText) {
-        this.formText = formText;
-    }
-
     @EJB
     private NewsEJB newsEJB;
 
@@ -34,6 +26,14 @@ public class CreateNewsController {
 
     @Inject
     private LoggingController loggingController;
+
+    public String getFormText() {
+        return formText;
+    }
+
+    public void setFormText(String formText) {
+        this.formText = formText;
+    }
 
     public String createNews(){
 

@@ -19,6 +19,8 @@
             <h:button value="Create News" outcome="newNews.xhtml" id="createNews"/>
         </c:if>
 
+        <h:button value="Get statistics" outcome="statistics.xhtml" id="getstatisticsBtn" />
+
 
         <h2>News list</h2>
 
@@ -30,6 +32,10 @@
             <c:otherwise>
 
                 <h:dataTable value="#{newsController.newses}" var="news" border="1" id="newsTable">
+                    <h:column>
+                        <f:facet name="header">News ID</f:facet>
+                        <h:outputText value="#{news.ID}"/>
+                    </h:column>
                     <h:column>
                         <f:facet name="header">Author</f:facet>
                         <h:outputText value="#{news.author.name}"/>
@@ -43,36 +49,31 @@
                         <h:outputText value="#{news.date}"/>
                     </h:column>
                     <h:column>
-                        <f:facet name="header">Rating</f:facet>
-                        <h:outputText value="#{news.rating.score}"/>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">News ID</f:facet>
-                        <h:outputText value="#{news.ID}"/>
-                    </h:column>
-                    <h:column>
                         <f:facet name="header">Comment</f:facet>
                         <h:form>
-                            <h:commandButton value="Comments" action="#{commentsController.saveNewsID(news.ID)}" id="commentsBtn">
+                            <h:commandButton value="#{news.comments.size()} comment(s)" action="#{commentsController.saveNewsID(news.ID)}"
+                                             id="commentsBtn">
                             </h:commandButton>
                         </h:form>
                     </h:column>
-                    <c:if test="#{news.comments.size != 0}" >
-                        <h:column>
-                            <f:facet name="header">Number of comments</f:facet>
-                            <h:outputText value="#{news.comments.size}"/>
-                        </h:column>
-                    </c:if>
+                    <h:column>
+                        <f:facet name="header">Rating</f:facet>
+                        <h:outputText value="#{news.rating.score}"/>
+                    </h:column>
 
                     <c:if test="#{loggingController.loggedIn}">
                         <h:column>
                             <f:facet name="header">Vote</f:facet>
-                            <h:button value="+" onclick="submit()"
-                                      valueChangeListener="#{newsController.vote(1, news.ID, loggingController.registeredUserEmail)}"
-                                      id="upvoteBtn"/>
-                            <h:button value="-" onclick="submit()"
-                                      valueChangeListener="#{newsController.vote(-1, news.ID, loggingController.registeredUserEmail)}"
-                                      id="downvoteBtn"/>
+                            <h:form>
+                                <h:commandButton value="+"
+                                          action="#{newsController.vote(1, news.ID, loggingController.registeredUserEmail)}"
+                                          id="upvoteBtn"/>
+                            </h:form>
+                            <h:form>
+                                <h:commandButton value="-"
+                                                 action="#{newsController.vote(-1, news.ID, loggingController.registeredUserEmail)}"
+                                                 id="downvoteBtn"/>
+                            </h:form>
                         </h:column>
                     </c:if>
                 </h:dataTable>
