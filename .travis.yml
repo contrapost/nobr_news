@@ -2,5 +2,12 @@ language: java
 sudo: false
 script: mvn clean verify -Dmaven.test.redirectTestOutputToFile=true
 
+addons:
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - google-chrome-stable
+
 jdk:
   - oraclejdk8
