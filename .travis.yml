@@ -2,7 +2,7 @@ language: java
 sudo: required
 dist: trusty
 script: mvn clean verify -Dmaven.test.redirectTestOutputToFile=true
-script: mvn -Dfrontend.skip.tests=true test
+script: mvn -Dfrontend.skip.tests=true test #TODO add chromedriver
 
 jdk:
   - oraclejdk8
